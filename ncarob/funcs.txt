@@ -1,0 +1,59 @@
+readline - get a line from a user with editing
+{
+	   readline returns the text of the line read.  A blank line returns
+       the empty string.  If EOF is encountered while reading a line,
+       and the line is empty, NULL is returned.  If an EOF is read with
+       a non-empty line, it is treated as a newline.
+}
+rl_clear_history
+rl_on_new_line
+rl_replace_line
+rl_redisplay
+add_history
+printf - print to stdout
+malloc - get dynamic memory
+free - free dynamic memory
+write - write a symbol to a filedes
+access
+open - open a filedes
+read - read n bytes from an open filedes
+close - close a filedes
+fork - create a new process
+wait - wait for a process to finish before continuing
+waitpid - wait for the process with pid_t to finish before continuing 
+wait3 
+wait4
+signal
+sigaction
+sigemptyset
+sigaddset
+kill - send a signal to a process or a process group
+exit - exit the program and free its memory and filedess
+getcwd
+chdir
+stat
+lstat
+fstat
+unlink
+execve - exec a system command from envir paths
+dup - duplicate a filedes
+dup2 - redirect filedes by closing and duplicating
+pipe - create a pipe of filedes
+opendir
+readdir
+closedir
+strerror - 
+perror - write something to stderror
+isatty
+ttyname
+ttyslot
+ioctl
+getenv
+tcsetattr
+tcgetattr
+tgetent
+tgetflag
+tgetnum
+tgetstr
+tgoto
+tputs

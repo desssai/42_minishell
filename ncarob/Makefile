@@ -1,6 +1,8 @@
-SRCS	=	./minishell_parser.c \
-			./minishell_parser_main.c \
-			./minishell_parser_envp.c \
+SRCS	=	./parser.c \
+			./parser_main.c \
+			./parser_envp.c \
+			./parser_envs_init.c \
+			./parser_envs_struct.c \
 
 OBJS	=	$(SRCS:.c=.o)
 

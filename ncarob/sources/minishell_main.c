@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 15:21:34 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/06 15:31:14 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:42:59 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ char	*read_prompt_line(void)
 	return (line_read);
 }
 
+void add_line_to_history(char *line)
+{
+	if (line && *line)
+		add_history(line);
+}
+
 void	set_prompt(t_envars **envs)
 {
 	char	*line;
@@ -38,6 +44,7 @@ void	set_prompt(t_envars **envs)
 			break ;
 		else
 			ft_parse_input(line, *envs);
+		add_line_to_history(line);
 		free(line);
 	}
 	exit(EXIT_SUCCESS);

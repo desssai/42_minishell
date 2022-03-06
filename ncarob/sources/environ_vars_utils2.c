@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:33:11 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/06 15:28:07 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:46:16 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_envars	*ft_envar_new(char *key, char *value)
 	return (var);
 }
 
-void	ft_envar_add_front(t_envars **vars, t_envars *new_var)
+static void	ft_envar_add_front(t_envars **vars, t_envars *new_var)
 {
 	new_var->next = *vars;
 	*vars = new_var;

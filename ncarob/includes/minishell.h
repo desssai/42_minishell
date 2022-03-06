@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/06 15:33:08 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:46:03 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int			ft_parse_input(char *str, t_envars *envs);
 
 // Environment Variables Parser.
 
-void		ft_envar_add_front(t_envars **vars, t_envars *new_var);
 void		ft_envar_add_back(t_envars **vars, t_envars *new_var);
 void		ft_envar_del_one(t_envars **vars, char *key);
 t_envars	*ft_envar_new(char *key, char *value);

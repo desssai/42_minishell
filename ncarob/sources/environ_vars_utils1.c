@@ -1,36 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_envs_init.c                                 :+:      :+:    :+:   */
+/*   environ_vars_utils1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 22:49:33 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/05 23:31:44 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:28:03 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
-t_envars	**ft_init_envars(char **envp)
+static void	fatal_error(char *msg)
+{
+	ft_putstr_fd(msg, 2);
+	exit(EXIT_FAILURE);
+}
+
+t_envars	*ft_init_envars(char **envp)
 {
 	char		**key_value;
-	t_envars	**envars;
+	t_envars	*envars;
 	t_envars	*var;
 	int			i;
 
-	envars = &var;
-	var = NULL;
+	envars = NULL;
 	if (!envp)
 		return (NULL);
 	i = -1;
 	while (envp[++i])
 	{
 		key_value = ft_split(envp[i], '=');
+		if (!key_value)
+			fatal_error(MLC_ERROR);
 		var = ft_envar_new(key_value[0], key_value[1]);
 		if (!var)
-			exit(EXIT_FAILURE);
-		ft_envar_add_back(envars, var);
+			fatal_error(MLC_ERROR);
+		ft_envar_add_back(&envars, var);
+		free(key_value);
 	}
 	return (envars);
 }

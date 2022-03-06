@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_envs_struct.c                               :+:      :+:    :+:   */
+/*   environ_vars_utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:33:11 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/05 23:32:50 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/06 15:28:07 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 t_envars	*ft_envar_new(char *key, char *value)
 {
@@ -21,15 +21,13 @@ t_envars	*ft_envar_new(char *key, char *value)
 		return (NULL);
 	var->key = key;
 	var->value = value;
-	var->prev = NULL;
 	var->next = NULL;
 	return (var);
 }
 
 void	ft_envar_add_front(t_envars **vars, t_envars *new_var)
 {
-	printf("YAY\n");
-	new_var->next = NULL;
+	new_var->next = *vars;
 	*vars = new_var;
 }
 
@@ -38,36 +36,45 @@ void	ft_envar_add_back(t_envars **vars, t_envars *new_var)
 	t_envars	*copy;
 
 	copy = *vars;
-	if (!(*vars)->next)
+	if (!(*vars))
 		ft_envar_add_front(vars, new_var);
 	else
 	{
 		while (copy->next)
 			copy = copy->next;
-		new_var->prev = copy;
 		copy->next = new_var;
 		new_var->next = NULL;
 	}
 }
 
-void	ft_envar_del_one(t_envars **vars, t_envars *var)
+void	ft_envar_del_one(t_envars **vars, char *key)
 {
-	if (!vars || !(*vars) || !var)
+	t_envars	*curr;
+	t_envars	*prev;
+
+	if (!(*vars) || !key)
 		return ;
-	free(var->key);
-	free(var->value);
-	if (var->prev)
-		var->prev->next = var->next;
+	prev = NULL;
+	curr = *vars;
+	while (curr && ft_strncmp(curr->key, key, ft_strlen(key) + 1))
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	free(curr->key);
+	free(curr->value);
+	if (prev)
+		prev->next = curr->next;
 	else
-		*vars = var->next;
-	free(var);
+		*vars = curr->next;
+	free(curr);
 }
 
 void	ft_envars_clear(t_envars **vars)
 {
 	t_envars	*prev;
 
-	if (!vars || !(*vars))
+	if (!(*vars))
 		return ;
 	prev = NULL;
 	while (*vars)
@@ -80,12 +87,6 @@ void	ft_envars_clear(t_envars **vars)
 			free(prev->value);
 			free(prev);
 		}
-	}
-	if (prev)
-	{
-		free(prev->key);
-		free(prev->value);
-		free(prev);
 	}
 	*vars = NULL;
 }

@@ -1,12 +1,11 @@
-SRCS	=	./parser.c \
-			./parser_main.c \
-			./parser_envp.c \
-			./parser_envs_init.c \
-			./parser_envs_struct.c \
+SRCS	=	./sources/minishell_main.c \
+			./sources/command_parsing1.c \
+			./sources/environ_vars_utils1.c \
+			./sources/environ_vars_utils2.c \
 
 OBJS	=	$(SRCS:.c=.o)
 
-HEADS	=	./
+HEADS	=	./includes
 
 NAME	=	parser
 
@@ -18,7 +17,7 @@ FLAGS	=	-Wall -Werror -Wextra
 
 RM		=	rm -f
 
-%.o: %.c ./minishell.h
+%.o: %.c ./inclues/minishell.h
 	$(GCC) $(FLAGS) -I$(HEADS) -c $< -o $@ 
 
 $(NAME): $(OBJS) ./libft/libft.h

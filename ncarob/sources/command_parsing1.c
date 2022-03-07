@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/06 15:30:29 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/07 18:47:33 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	ft_check_line(char *str)
 	i = -1;
 	inside_s_quote = 0;
 	inside_d_quote = 0;
-	while (str[++i])
+	while (str && str[++i])
 	{
 		if (str[i] == '\\')
 			return (EXIT_FAILURE);
@@ -36,7 +36,7 @@ static int	ft_check_line(char *str)
 		else if (inside_d_quote && !inside_s_quote && str[i] == '\"')
 			inside_d_quote = 0;
 	}
-	if (inside_d_quote || inside_s_quote)
+	if (!str || inside_d_quote || inside_s_quote)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -98,13 +98,31 @@ static char	*ft_pre_parsing(char *str, int *index, char quote, t_envars *envs)
 	return (tmp[0]);
 }
 
-int	ft_parse_input(char *s, t_envars *envs)
+static char	*ft_remove_spaces(char *str)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == ' ')
+		{
+			j = 0;
+			while (str[++i] && str[i] == ' ')
+				j++;
+		}
+	}
+}
+
+t_cmnds	*ft_parse_input(char *s, t_envars *envs)
 {
 	int		i;
 	char	*str;
+	t_cmnds	*commands;
 
 	if (ft_check_line(s))
-		return (ft_putstr_fd(CMD_ERROR, 2));
+		fatal_error(CMD_ERROR);
 	i = -1;
 	str = ft_strdup(s);
 	while (str && str[++i])
@@ -116,7 +134,10 @@ int	ft_parse_input(char *s, t_envars *envs)
 		else if (str[i] == '$')
 			str = ft_replace_path(str, &i, envs);
 	}
-	printf("%s\n", str);
+	// commands = ft_parse_commands(str);
+	ft_putendl_fd(str, 1);
 	free(str);
-	return (0);
+	// if (!commands)
+		// fatal_error(MLC_ERROR);
+	return (NULL);
 }

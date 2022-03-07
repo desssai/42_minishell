@@ -6,13 +6,13 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 22:49:33 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/06 15:28:03 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/07 17:02:59 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	fatal_error(char *msg)
+void	fatal_error(char *msg)
 {
 	ft_putstr_fd(msg, 2);
 	exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 18:35:46 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/04 21:15:37 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/07 17:10:44 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *s)
 	int		i;
 
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 		i++;
 	str = (char *)malloc((i + 1) * sizeof(char));
 	if (str == NULL)

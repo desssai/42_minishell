@@ -6,22 +6,22 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/07 18:48:12 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/07 22:09:21 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stdio.h>
 
 # define MLC_ERROR "minishell: memory allocation error\n"
 # define CMD_ERROR "minishell: parsing error\n"
@@ -51,9 +51,12 @@ typedef struct s_comnds
 
 // Command Parser.
 
+void		ft_command_add_back(t_cmnds **commands_list, t_cmnds *new_command);
+void		ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote);
+t_cmnds		*ft_init_commands(char *str, t_envars *envs);
+t_cmnds		*ft_command_new(char *str, t_envars *envs);
 t_cmnds		*ft_parse_input(char *str, t_envars *envs);
-void		ft_cmnds_clear(t_cmnds **commands_list);
-t_cmnds		*ft_init_commands(char *str);
+void		ft_commands_clear(t_cmnds **commands_list);
 
 // Environment Variables Parser.
 

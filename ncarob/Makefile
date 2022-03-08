@@ -19,7 +19,7 @@ FLAGS	=	-Wall -Werror -Wextra
 
 RM		=	rm -f
 
-%.o: %.c ./inclues/minishell.h
+%.o: %.c ./includes/minishell.h
 	$(GCC) $(FLAGS) -I$(HEADS) -c $< -o $@ 
 
 $(NAME): $(OBJS) ./libft/libft.h

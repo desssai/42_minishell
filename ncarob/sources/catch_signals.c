@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_main.c                                   :+:      :+:    :+:   */
+/*   catch_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/04 15:21:34 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/09 21:59:28 by wurrigon         ###   ########.fr       */
+/*   Created: 2022/03/07 19:44:17 by wurrigon          #+#    #+#             */
+/*   Updated: 2022/03/07 20:09:04 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void *sigint_handler(int sig_num)
 {
-	t_envars	*envs;
-
-	(void)argv;
-	if (argc != 1)
-		return (printf("Type commands after minishell is launched stupidass\n"));
-	catch_signals();
-	envs = ft_init_envars(envp);
-	set_prompt(&envs);
+	(void)sig_num;
 	
-	ft_envars_clear(&envs);
-	return (0);
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	// clear_input();
+	return (NULL);
+}
+
+void catch_signals(void)
+{
+	signal(SIGINT, (void *)sigint_handler); // ctrl-c
+	signal(SIGQUIT, SIG_IGN); 				// ctrl-/
+	signal(SIGTSTP, SIG_IGN); 				// ctrl-z
 }

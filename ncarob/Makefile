@@ -5,6 +5,14 @@ SRCS	=	./sources/minishell_main.c \
 			./sources/command_parsing3.c \
 			./sources/environ_vars_utils1.c \
 			./sources/environ_vars_utils2.c \
+			./sources/catch_signals.c \
+			./sources/built_in_cd.c \
+			./sources/built_in_pwd.c \
+			./sources/built_in_echo.c \
+			./sources/built_in_env.c \
+			./sources/built_in_exit.c \
+			./sources/built_in_unset.c \
+			./sources/built_ins.main.c \
 
 OBJS	=	$(SRCS:.c=.o)
 
@@ -25,7 +33,7 @@ RM		=	rm -f
 
 $(NAME): $(OBJS) ./libft/libft.h
 	$(MAKE) -C libft all
-	$(GCC) $(FLAGS) $(OBJS) $(LNAME) -o $(NAME) -lreadline
+	$(GCC) $(FLAGS) $(OBJS) $(LNAME) -L/Users/${USER}/.brew/opt/readline/lib -lreadline -o $(NAME)
 
 all:	$(NAME)
 

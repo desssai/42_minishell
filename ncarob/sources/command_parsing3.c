@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/08 18:42:30 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/09 15:29:58 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	*ft_remove_redirects(char *str)
 		i[0]++;
 	}
 	if (!tmp)
-		tmp = ft_substr(str, 0, i[0] + 1);
+		return (str);
 	return (tmp);
 }
 

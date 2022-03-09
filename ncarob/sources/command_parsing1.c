@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/08 18:26:07 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/09 15:30:27 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char	*ft_remove_spaces(char *str)
 		i[0]++;
 	}
 	if (!tmp)
-		tmp = ft_substr(str, 0, i[0] + 1);
+		return (str);
 	return (tmp);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/09 15:12:07 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/09 15:30:31 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	ft_init_commands(char *str, t_cmnds **commands, t_envars *envs)
 	commands[k++] = ft_command_new(ft_substr(str, j, i - j), envs);
 	if (!commands[k - 1])
 		fatal_error(MLC_ERROR);
+	commands[k] = NULL;
 }
 
 char	*ft_remove_quotes(char *str, t_envars *envs)

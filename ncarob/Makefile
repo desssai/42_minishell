@@ -2,6 +2,7 @@ SRCS	=	./sources/minishell_main.c \
 			./sources/readline_prompt.c \
 			./sources/command_parsing1.c \
 			./sources/command_parsing2.c \
+			./sources/command_parsing3.c \
 			./sources/environ_vars_utils1.c \
 			./sources/environ_vars_utils2.c \
 
@@ -9,7 +10,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 HEADS	=	./includes
 
-NAME	=	parser
+NAME	=	minishell
 
 LNAME	=	libft/libft.a
 

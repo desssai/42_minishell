@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/07 18:26:07 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/08 18:43:05 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	add_line_to_history(char *line)
 void	set_prompt(t_envars **envs)
 {
 	char	*line;
+	t_cmnds	**commands;
 
 	line = NULL;
 	while (1)
@@ -43,7 +44,10 @@ void	set_prompt(t_envars **envs)
 		if (!line)
 			break ;
 		else
-			ft_parse_input(line, *envs);
+		{
+			commands = ft_parse_input(line, *envs);
+			ft_commands_clear(commands);
+		}
 		add_line_to_history(line);
 		free(line);
 	}

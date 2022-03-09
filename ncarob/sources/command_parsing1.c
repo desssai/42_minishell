@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/07 22:02:18 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/08 18:26:07 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	ft_check_line(char *str)
 {
+	int		num_of_commands;
 	int		inside_s_quote;
 	int		inside_d_quote;
 	int		i;
@@ -21,21 +22,24 @@ static int	ft_check_line(char *str)
 	i = -1;
 	inside_s_quote = 0;
 	inside_d_quote = 0;
+	num_of_commands = 1;
 	while (str && str[++i])
 	{
 		if (str[i] == '\\')
 			return (EXIT_FAILURE);
 		else if (str[i] == ';')
 			return (EXIT_FAILURE);
+		else if (!inside_s_quote && !inside_d_quote && str[i] == '|')
+			num_of_commands++;
 		else
 			ft_check_quotes(str[i], &inside_s_quote, &inside_d_quote);
 	}
 	if (!str || inside_s_quote || inside_d_quote)
 		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	return (num_of_commands);
 }
 
-static char	*ft_replace_path(char *str, int *index, t_envars *envs)
+char	*ft_replace_path(char *str, int *index, t_envars *envs)
 {
 	char	*value;
 	int		i;
@@ -63,7 +67,7 @@ static char	*ft_replace_path(char *str, int *index, t_envars *envs)
 	return (ft_strdup(""));
 }
 
-static char	*ft_pre_parsing(char *str, int *index, char quote, t_envars *envs)
+char	*ft_strip_quotes(char *str, int *index, char quote, t_envars *envs)
 {
 	int		i;
 	char	*tmp[3];
@@ -92,54 +96,45 @@ static char	*ft_pre_parsing(char *str, int *index, char quote, t_envars *envs)
 	return (tmp[0]);
 }
 
-static char	*ft_remove_spaces(char *str)
+char	*ft_remove_spaces(char *str)
 {
 	char	*tmp;
 	int		i[5];
 
-	ft_memset(i, 0, sizeof(int) * 5);
-	tmp = str;
-	while (str[++i[0]])
+	ft_memset(&i, 0, sizeof(int) * 5);
+	tmp = NULL;
+	while (str[i[0]])
 	{
 		ft_check_quotes(str[i[0]], &i[4], &i[3]);
 		if (!i[3] && !i[4] && str[i[0]] == ' ')
 		{
 			tmp = ft_substr(str, 0, i[0] + 1);
-			if (i[2]++)
-				free(str);
 			i[1] = i[0];
 			while (str[++i[0]] && str[i[0]] == ' ')
 				;
 			tmp = ft_strjoin(tmp, ft_strdup(&str[i[0]]), 1, 1);
+			free(str);
 			i[0] = i[1];
 			str = tmp;
 		}
+		i[0]++;
 	}
+	if (!tmp)
+		tmp = ft_substr(str, 0, i[0] + 1);
 	return (tmp);
 }
 
-t_cmnds	*ft_parse_input(char *s, t_envars *envs)
+t_cmnds	**ft_parse_input(char *s, t_envars *envs)
 {
-	int		i;
-	char	*str;
-	t_cmnds	*commands;
+	int		num_of_commands;
+	t_cmnds	**commands;
 
-	if (ft_check_line(s))
+	num_of_commands = ft_check_line(s);
+	if (!num_of_commands)
 		fatal_error(CMD_ERROR);
-	i = -1;
-	str = ft_remove_spaces(s);
-	while (str && str[++i])
-	{
-		if (str[i] == '\'')
-			str = ft_pre_parsing(str, &i, '\'', NULL);
-		else if (str[i] == '\"')
-			str = ft_pre_parsing(str, &i, '\"', envs);
-		else if (str[i] == '$')
-			str = ft_replace_path(str, &i, envs);
-	}
-	commands = ft_parse_commands(str, envs);
-	free(str);
+	commands = (t_cmnds **)malloc(sizeof(t_cmnds *) * (num_of_commands + 1));
 	if (!commands)
 		fatal_error(MLC_ERROR);
-	return (NULL);
+	ft_init_commands(s, commands, envs);
+	return (commands);
 }

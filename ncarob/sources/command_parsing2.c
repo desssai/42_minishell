@@ -6,101 +6,103 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 14:27:27 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/07 22:08:30 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/09 15:12:07 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmnds	*ft_init_commands(char *str, t_envars *envs)
+void	ft_init_commands(char *str, t_cmnds **commands, t_envars *envs)
 {
-	t_cmnds	*command;
-	t_cmnds	*commands_list;
-	char	**command_blocks;
+	int	i;
+	int	j;
+	int	k;
+	int	inside_s_quote;
+	int	inside_d_quote;
 
-	commands_list = NULL;
-	command_blocks = ft_split(str, '|');
-	if (!command_blocks)
-		return (NULL);
-	while (*command_blocks)
+	i = -1;
+	j = 0;
+	k = 0;
+	inside_s_quote = 0;
+	inside_d_quote = 0;
+	while (str[++i])
 	{
-		command = ft_command_new(*command_blocks, envs);
-		if (!command)
-			fatal_error(MLC_ERROR);
-		ft_command_add_back(&commands_list, command);
-		free(*command_blocks);
-		command_blocks++;
+		ft_check_quotes(str[i], &inside_s_quote, &inside_d_quote);
+		if (!inside_d_quote && !inside_s_quote && str[i] == '|')
+		{
+			commands[k++] = ft_command_new(ft_substr(str, j, i - j), envs);
+			if (!commands[k - 1])
+				fatal_error(MLC_ERROR);
+			j = i + 1;
+		}
 	}
-	free(command_blocks);
+	commands[k++] = ft_command_new(ft_substr(str, j, i - j), envs);
+	if (!commands[k - 1])
+		fatal_error(MLC_ERROR);
+}
+
+char	*ft_remove_quotes(char *str, t_envars *envs)
+{
+	int	i;
+
+	i = -1;
+	while (str && str[++i])
+	{
+		if (str[i] == '\'')
+			str = ft_strip_quotes(str, &i, '\'', NULL);
+		else if (str[i] == '\"')
+			str = ft_strip_quotes(str, &i, '\"', envs);
+		else if (str[i] == '$')
+			str = ft_replace_path(str, &i, envs);
+	}
+	return (str);
 }
 
 t_cmnds	*ft_command_new(char *str, t_envars *envs)
 {
 	t_cmnds	*command;
-	int		i;
-	int		j;
 
+	if (!str)
+		return (NULL);
 	command = (t_cmnds *)malloc(sizeof(t_cmnds));
+	ft_memset(command, 0, sizeof(t_cmnds));
 	if (!command)
 		return (NULL);
-	i = -1;
-	while (str && str[++i] && (str[i] != ' ' || str[i] != '<' || str[i] != '>'))
-		;
-	j = i;
-	command->command = ft_substr(str, 0, i);
-	command->flag = ft_get_command_flag(&str);
-	command->infile = ft_get_command_infile(&str);
-	command->outfile = ft_get_command_outfile(&str);
+	ft_get_command_infile(str, command);
+	ft_get_command_outfile(str, command);
+	str = ft_remove_redirects(str);
+	str = ft_remove_spaces(str);
+	str = ft_remove_quotes(str, envs);
 	command->envs = envs;
-	command->next = NULL;
+	free(str);
 	return (command);
 }
 
-void	ft_command_add_back(t_cmnds **commands_list, t_cmnds *new_command)
+	// ft_get_command_flag(str, command);
+
+void	ft_commands_clear(t_cmnds **commands)
 {
-	t_cmnds	*copy;
+	int	i;
+	// int	k;
 
-	copy = *commands_list;
-	if (!(*commands_list))
-	{
-		new_command->next = *commands_list;
-		*commands_list = new_command;
-	}
-	else
-	{
-		while (copy->next)
-			copy = copy->next;
-		copy->next = new_command;
-		new_command->next = NULL;
-	}
-}
-
-void	ft_commands_clear(t_cmnds **commands_list)
-{
-	t_cmnds	*prev;
-
-	if (!(*commands_list))
+	i = -1;
+	if (!commands)
 		return ;
-	prev = NULL;
-	while (*commands_list)
+	while (commands[++i])
 	{
-		prev = (*commands_list);
-		(*commands_list) = (*commands_list)->next;
-		if (prev)
-		{
-			free(prev->outfile);
-			free(prev->command);
-			free(prev->infile);
-			free(prev->flag);
-			while (prev->args)
-			{
-				free(*(prev->args));
-				prev->args++;
-			}
-			free(prev);
-		}
+		free(commands[i]->outfile);
+		// free(commands[i]->command);
+		free(commands[i]->infile);
+		// free(commands[i]->flag);
+		// k = -1;
+		// while (commands[i]->args[++k])
+		// 	free(commands[i]->args[k]);
+		// free(commands[i]->args);
+		if (commands[i])
+			free(commands[i]);
 	}
-	*commands_list = NULL;
+	free(commands);
+	commands = NULL;
 }
 
 void	ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote)
@@ -110,7 +112,7 @@ void	ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote)
 	else if (!*inside_d_quote && !*inside_s_quote && c == '\"')
 		*inside_d_quote = 1;
 	else if (!*inside_d_quote && *inside_s_quote && c == '\'')
-		inside_s_quote = 0;
+		*inside_s_quote = 0;
 	else if (*inside_d_quote && !*inside_s_quote && c == '\"')
 		*inside_d_quote = 0;
 }

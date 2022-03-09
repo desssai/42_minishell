@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/07 22:09:21 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/08 18:17:18 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,29 @@ typedef struct s_comnds
 {
 	char			*command;
 	char			*outfile;
+	int				limiter;
 	char			*infile;
 	char			**args;
 	int				append;
 	char			*flag;
 	t_envars		*envs;
-	struct s_comnds	*next;
 }	t_cmnds;
 
 // Command Parser.
 
-void		ft_command_add_back(t_cmnds **commands_list, t_cmnds *new_command);
 void		ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote);
-t_cmnds		*ft_init_commands(char *str, t_envars *envs);
+void		ft_init_commands(char *str, t_cmnds **commands, t_envars *envs);
 t_cmnds		*ft_command_new(char *str, t_envars *envs);
-t_cmnds		*ft_parse_input(char *str, t_envars *envs);
+t_cmnds		**ft_parse_input(char *str, t_envars *envs);
 void		ft_commands_clear(t_cmnds **commands_list);
+
+char		*ft_strip_quotes(char *str, int *index, char quote, t_envars *envs);
+char		*ft_replace_path(char *str, int *index, t_envars *envs);
+void		ft_get_command_outfile(char *line, t_cmnds *command);
+void		ft_get_command_infile(char *line, t_cmnds *command);
+char		*ft_remove_redirects(char *str);
+char		*ft_remove_spaces(char *str);
+
 
 // Environment Variables Parser.
 

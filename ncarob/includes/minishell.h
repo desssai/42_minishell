@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 18:42:58 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 20:05:20 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_envars	*ft_init_envars(char **envp);
 // Readline and prompt.
 
 void		add_line_to_history(char *line);
-void		set_prompt(t_envars **envs);
+void		set_shell(t_envars **envs, t_shell *shell);
 char		*read_prompt_line(void);
 void 		rl_replace_line(const char *text, int clear_undo);
 
@@ -97,6 +97,7 @@ void		fatal_error(char *msg);
 // Signals.
 
 void		catch_signals(void);
+void		tty_hide_input(void);
 
 // Built-ins.
 void 		built_ins(t_envars **list, t_cmnds *store);

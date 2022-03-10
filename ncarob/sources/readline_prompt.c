@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 19:47:16 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 20:06:16 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	add_line_to_history(char *line)
 		add_history(line);
 }
 
-void	set_prompt(t_envars **envs)
+void	set_shell(t_envars **envs, t_shell *shell)
 {
 	char	*line;
 	t_cmnds	**commands;
@@ -45,6 +45,9 @@ void	set_prompt(t_envars **envs)
 			break ;
 		else
 		{
+			tty_hide_input();
+			catch_signals();
+			shell->shell_level = 1;
 			commands = ft_parse_input(line, *envs);
 			// built_ins(envs, *commands);
 			ft_commands_clear(commands);
@@ -52,5 +55,4 @@ void	set_prompt(t_envars **envs)
 		add_line_to_history(line);
 		free(line);
 	}
-	exit(EXIT_SUCCESS);
 }

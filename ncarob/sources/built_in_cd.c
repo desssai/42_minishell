@@ -47,13 +47,25 @@ void handle_non_existing_path(t_cmnds *commands)
 
 void change_old_pwd_environ(t_envars **list, char *old_path)
 {
-	t_envars	*old_pwd_node;
+	// t_envars	*old_pwd_node;
 
-	old_pwd_node = ft_envar_new("OLD_PWD", old_path);
-	if (!old_pwd_node)
-		fatal_error(MLC_ERROR);
-	ft_envar_del_one(list, "OLDPWD");
+	// old_pwd_node = ft_envar_new("OLD_PWD", old_path);
+	// if (!old_pwd_node)
+	// 	fatal_error(MLC_ERROR);
+	// ft_envar_del_one(list, "OLDPWD");
 	// ft_envar_add_back(list, old_pwd_node);
+	t_envars *tmp;
+	tmp = *list;
+	while (tmp)
+	{
+		if ((ft_strncmp(tmp->key, "OLD_PWD", 7) == 0) 
+			&& (ft_strlen(tmp->key) == ft_strlen("OLD_PWD")))
+			break ;
+		tmp = tmp->next;
+	}
+	free(tmp->value);
+	tmp->value = ft_strdup(old_path);
+	
 }
 
 void change_new_pwd_environ(t_envars **list, char *new_path)
@@ -63,9 +75,9 @@ void change_new_pwd_environ(t_envars **list, char *new_path)
 	new_pwd_node = ft_envar_new("PWD", new_path);
 	if (!new_pwd_node)
 		fatal_error(MLC_ERROR);
-	dprintf(2, "HERE [%s]\n", new_pwd_node->value);
+	// dprintf(2, "HERE [%s]\n", new_pwd_node->value);
 	ft_envar_del_one(list, "PWD");
-	// ft_envar_add_back(list, new_pwd_node);
+	ft_envar_add_back(list, new_pwd_node);
 }
 
 void execute_cd(t_envars **list, t_cmnds **commands)
@@ -74,7 +86,6 @@ void execute_cd(t_envars **list, t_cmnds **commands)
 	char	old_path[MAX_PATH];
 	char	new_path[MAX_PATH];
 
-	// tmp 
 	t_cmnds *tmp;
 	tmp = *commands;
 	if (getcwd(old_path, MAX_PATH) == NULL)
@@ -83,7 +94,7 @@ void execute_cd(t_envars **list, t_cmnds **commands)
 		handle_empty_input(*list);
 	else 
 	{
-		status = chdir(tmp->args[0]);
+		status = chdir(tmp->infile);
 		if (status == -1)
 		{
 			handle_non_existing_path(*commands);
@@ -91,7 +102,7 @@ void execute_cd(t_envars **list, t_cmnds **commands)
 	}
 	if (getcwd(new_path, MAX_PATH) == NULL)
 		fatal_error(MLC_ERROR);
-	// change_old_pwd_environ(list, old_path);
+	change_old_pwd_environ(list, old_path);
 	// change_new_pwd_environ(list, new_path);
 }
 

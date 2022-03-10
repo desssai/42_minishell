@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 20:05:20 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 20:59:24 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,12 @@ void		catch_signals(void);
 void		tty_hide_input(void);
 
 // Built-ins.
-void 		built_ins(t_envars **list, t_cmnds *store);
+void 		built_ins(t_envars **list, t_cmnds *store, t_shell *shell);
 void 		execute_pwd(void);
 void		execute_env(t_envars *list);
 void 		execute_unset(t_envars **list, char *key);
 void		execute_exit(void);
-void 		execute_cd(t_envars **list, t_cmnds **commands);
+void 		execute_cd(t_envars **list, t_cmnds **commands, t_shell *shell);
 void 		execute_echo(t_cmnds *commands);
 
 #endif

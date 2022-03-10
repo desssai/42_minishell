@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 20:20:33 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 21:04:49 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ void	set_shell(t_envars **envs, t_shell *shell)
 {
 	char	*line;
 	t_cmnds	**commands;
-
+	(void)envs;
+	(void)shell;
+	commands = NULL;
 	line = NULL;
 	while (1)
 	{
@@ -45,12 +47,9 @@ void	set_shell(t_envars **envs, t_shell *shell)
 			break ;
 		else
 		{
-			tty_hide_input();
-			catch_signals();
-			shell->shell_level = 1;
-			commands = ft_parse_input(line, *envs);
-			built_ins(envs, *commands);
-			ft_commands_clear(commands);
+			// commands = ft_parse_input(line, *envs);
+			// built_ins(envs, *commands, shell);
+			// ft_commands_clear(commands);
 		}
 		add_line_to_history(line);
 		free(line);

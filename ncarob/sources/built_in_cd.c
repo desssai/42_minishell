@@ -37,12 +37,12 @@ void handle_empty_input(t_envars *list)
 		handle_unset_home();
 }
 
-void handle_non_existing_path(t_cmnds *commands)
+void handle_non_existing_path(t_cmnds *commands, t_shell *shell)
 {
-	// change exit status
 	write(STDERR_FILENO, "minishell: cd: ", 15);
 	write(STDERR_FILENO, *commands->args, ft_strlen(*commands->args));
 	write(STDERR_FILENO, ": No such file or directory\n", 29);
+	shell->exit_status = 1;
 }
 
 void change_old_pwd_environ(t_envars **list, char *old_path)
@@ -70,17 +70,27 @@ void change_old_pwd_environ(t_envars **list, char *old_path)
 
 void change_new_pwd_environ(t_envars **list, char *new_path)
 {
-	t_envars *new_pwd_node;
+	// t_envars *new_pwd_node;
 
-	new_pwd_node = ft_envar_new("PWD", new_path);
-	if (!new_pwd_node)
-		fatal_error(MLC_ERROR);
-	// dprintf(2, "HERE [%s]\n", new_pwd_node->value);
-	ft_envar_del_one(list, "PWD");
-	ft_envar_add_back(list, new_pwd_node);
+	// new_pwd_node = ft_envar_new("PWD", new_path);
+	// if (!new_pwd_node)
+	// 	fatal_error(MLC_ERROR);
+	// ft_envar_del_one(list, "PWD");
+	// ft_envar_add_back(list, new_pwd_node);
+	t_envars *tmp;
+	tmp = *list;
+	while (tmp)
+	{
+		if ((ft_strncmp(tmp->key, "PWD", 3) == 0) 
+			&& (ft_strlen(tmp->key) == ft_strlen("PWD")))
+			break ;
+		tmp = tmp->next;
+	}
+	free(tmp->value);
+	tmp->value = ft_strdup(new_path);
 }
 
-void execute_cd(t_envars **list, t_cmnds **commands)
+void execute_cd(t_envars **list, t_cmnds **commands, t_shell *shell)
 {
 	int		status;
 	char	old_path[MAX_PATH];
@@ -97,15 +107,14 @@ void execute_cd(t_envars **list, t_cmnds **commands)
 		status = chdir(tmp->infile);
 		if (status == -1)
 		{
-			handle_non_existing_path(*commands);
+			handle_non_existing_path(*commands, shell);
 		}
 	}
 	if (getcwd(new_path, MAX_PATH) == NULL)
 		fatal_error(MLC_ERROR);
 	change_old_pwd_environ(list, old_path);
-	// change_new_pwd_environ(list, new_path);
+	change_new_pwd_environ(list, new_path);
 }
-
 
 /*
 	1. save current path (old_path)

@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/09 22:03:37 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 18:42:58 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void		fatal_error(char *msg);
 void		catch_signals(void);
 
 // Built-ins.
-void 		built_ins(t_envars **list, t_cmnds *store, char* line);
+void 		built_ins(t_envars **list, t_cmnds *store);
 void 		execute_pwd(void);
 void		execute_env(t_envars *list);
 void 		execute_unset(t_envars **list, char *key);

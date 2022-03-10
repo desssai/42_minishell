@@ -6,20 +6,14 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/09 16:58:13 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 18:38:25 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void built_ins(t_envars **list, t_cmnds *store, char* line)
+void built_ins(t_envars **list, t_cmnds *store)
 {
-	char **tmp;
-
-	tmp = ft_split(line, ' ');
-	store->command = tmp[0];
-	store->arg = tmp[1];
-	free(tmp);
 	if (ft_strncmp((const char *)store->command, "pwd", 3) == 0 &&
 		ft_strlen(store->command) == ft_strlen("pwd"))
 		execute_pwd();

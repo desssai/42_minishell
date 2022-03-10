@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readline_prompt.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/09 15:20:38 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/10 19:47:16 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	set_prompt(t_envars **envs)
 		else
 		{
 			commands = ft_parse_input(line, *envs);
+			// built_ins(envs, *commands);
 			ft_commands_clear(commands);
 		}
 		add_line_to_history(line);

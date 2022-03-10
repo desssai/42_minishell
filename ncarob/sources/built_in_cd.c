@@ -41,7 +41,7 @@ void handle_non_existing_path(t_cmnds *commands)
 {
 	// change exit status
 	write(STDERR_FILENO, "minishell: cd: ", 15);
-	write(STDERR_FILENO, commands->arg, ft_strlen(commands->arg));
+	write(STDERR_FILENO, *commands->args, ft_strlen(*commands->args));
 	write(STDERR_FILENO, ": No such file or directory\n", 29);
 }
 
@@ -79,11 +79,11 @@ void execute_cd(t_envars **list, t_cmnds **commands)
 	tmp = *commands;
 	if (getcwd(old_path, MAX_PATH) == NULL)
 		fatal_error(MLC_ERROR);
-	if (tmp->arg == NULL)
+	if (tmp->args == NULL)
 		handle_empty_input(*list);
 	else 
 	{
-		status = chdir(tmp->arg);
+		status = chdir(tmp->args[0]);
 		if (status == -1)
 		{
 			handle_non_existing_path(*commands);

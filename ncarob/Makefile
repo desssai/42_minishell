@@ -12,6 +12,7 @@ SRCS	=	./sources/minishell_main.c \
 			./sources/built_ins/env.c \
 			./sources/built_ins/exit.c \
 			./sources/built_ins/unset.c \
+			./sources/built_ins/export.c \
 			./sources/built_ins/builtins_main.c \
 
 OBJS	=	$(SRCS:.c=.o)

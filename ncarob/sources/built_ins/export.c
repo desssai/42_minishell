@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/10 21:42:05 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/10 22:12:24 by wurrigon         ###   ########.fr       */
+/*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
+/*   Updated: 2022/03/10 22:14:10 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void execute_echo(t_cmnds *commands, t_shell *shell)
-{
-	// write(STDOUT_FILENO, *(commands->args), ft_strlen(*(commands->args)));
-	// if (commands->flag)
-	// 	write(STDOUT_FILENO, "$", 1);
-	// else if (!commands->flag)
-	// 	write(STDOUT_FILENO, "\n", 1);
-}	
+// void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
+// {
+	
+// }

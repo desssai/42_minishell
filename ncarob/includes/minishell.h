@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 20:59:24 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 21:55:30 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <stdbool.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
@@ -29,10 +30,18 @@
 # define MLC_ERROR "minishell: memory allocation error\n"
 # define CMD_ERROR "minishell: parsing error\n"
 
+// Exit status
+
+# define EXIT_ERR 1
+
+// General shell structure.
+
 typedef struct s_shell
 {
 	int				exit_status;
 	int				shell_level;
+	int				fd_in;
+	int				fd_out;
 }				t_shell;
 
 // Environment variables list structure.
@@ -77,11 +86,13 @@ char		*ft_remove_spaces(char *str);
 // Environment Variables Parser.
 
 void		ft_envar_add_back(t_envars **vars, t_envars *new_var);
+char 		*find_env_node(t_envars *list, const char *key);
 void		ft_envar_del_one(t_envars **vars, char *key);
 t_envars	*ft_envar_new(char *key, char *value);
 void		ft_envars_clear(t_envars **vars);
 void		ft_print_envars(t_envars *vars);
 t_envars	*ft_init_envars(char **envp);
+
 
 // Readline and prompt.
 
@@ -93,6 +104,7 @@ void 		rl_replace_line(const char *text, int clear_undo);
 // Utilities.
 
 void		fatal_error(char *msg);
+void 		set_shell_level(t_envars *envs, t_shell *shell);
 
 // Signals.
 
@@ -101,11 +113,11 @@ void		tty_hide_input(void);
 
 // Built-ins.
 void 		built_ins(t_envars **list, t_cmnds *store, t_shell *shell);
-void 		execute_pwd(void);
-void		execute_env(t_envars *list);
-void 		execute_unset(t_envars **list, char *key);
-void		execute_exit(void);
+void 		execute_pwd(t_shell *shell);
+void		execute_env(t_envars *list, t_shell *shell);
+void 		execute_unset(t_envars **list, t_cmnds *commands, t_shell *shell);
+void		execute_exit(t_shell *t_shell, t_cmnds *commands);
 void 		execute_cd(t_envars **list, t_cmnds **commands, t_shell *shell);
-void 		execute_echo(t_cmnds *commands);
+void 		execute_echo(t_cmnds *commands, t_shell *shell);
 
 #endif

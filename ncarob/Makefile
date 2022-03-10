@@ -5,14 +5,14 @@ SRCS	=	./sources/minishell_main.c \
 			./sources/command_parsing3.c \
 			./sources/environ_vars_utils1.c \
 			./sources/environ_vars_utils2.c \
-			./sources/catch_signals.c \
-			./sources/built_in_cd.c \
-			./sources/built_in_pwd.c \
-			./sources/built_in_echo.c \
-			./sources/built_in_env.c \
-			./sources/built_in_exit.c \
-			./sources/built_in_unset.c \
-			./sources/built_ins_main.c \
+			./sources/sig/catch_signals.c \
+			./sources/built_ins/cd.c \
+			./sources/built_ins/pwd.c \
+			./sources/built_ins/echo.c \
+			./sources/built_ins/env.c \
+			./sources/built_ins/exit.c \
+			./sources/built_ins/unset.c \
+			./sources/built_ins/builtins_main.c \
 
 OBJS	=	$(SRCS:.c=.o)
 

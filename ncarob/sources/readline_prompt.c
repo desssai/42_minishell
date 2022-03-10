@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 21:04:49 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/10 21:07:41 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	set_shell(t_envars **envs, t_shell *shell)
 {
 	char	*line;
 	t_cmnds	**commands;
+	
 	(void)envs;
 	(void)shell;
 	commands = NULL;
@@ -47,7 +48,7 @@ void	set_shell(t_envars **envs, t_shell *shell)
 			break ;
 		else
 		{
-			// commands = ft_parse_input(line, *envs);
+			commands = ft_parse_input(line, *envs);
 			// built_ins(envs, *commands, shell);
 			// ft_commands_clear(commands);
 		}

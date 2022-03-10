@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_main.c                                   :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/04 15:21:34 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 21:14:25 by wurrigon         ###   ########.fr       */
+/*   Created: 2022/03/10 21:42:20 by wurrigon          #+#    #+#             */
+/*   Updated: 2022/03/10 21:46:15 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void execute_pwd(t_shell *shell)
 {
-	t_envars	*envs;
-	t_shell		shell;
-
-	(void)argv;
-	if (argc != 1)
-		return (printf("Type commands after minishell is launched stupidass\n"));
-	envs = ft_init_envars(envp);
-	set_shell_level(envs, &shell);
-	shell.exit_status = 0;
-	tty_hide_input();
-	catch_signals();
-	set_shell(&envs, &shell);
-	ft_envars_clear(&envs);
-	return (shell.exit_status);
+	char dir[MAX_PATH];
+	
+	shell->exit_status = 0;
+	if (getcwd(dir, MAX_PATH) == NULL)
+		fatal_error(MLC_ERROR);
+	write(STDOUT_FILENO, dir, ft_strlen(dir));
+	write(STDOUT_FILENO, "\n", 1);
 }

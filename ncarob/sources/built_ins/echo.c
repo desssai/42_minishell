@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:05 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/10 22:12:24 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/11 17:36:25 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void execute_echo(t_cmnds *commands, t_shell *shell)
 {
-	// write(STDOUT_FILENO, *(commands->args), ft_strlen(*(commands->args)));
-	// if (commands->flag)
-	// 	write(STDOUT_FILENO, "$", 1);
-	// else if (!commands->flag)
-	// 	write(STDOUT_FILENO, "\n", 1);
+	int		newline;
+
+	(void)commands;
+	(void)shell;
 }	

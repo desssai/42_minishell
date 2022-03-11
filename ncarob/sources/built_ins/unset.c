@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:26 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/10 22:09:17 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/11 17:32:01 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool is_valid_env_name(const char *str)
 	return (true);
 }
 
-void execute_unset(t_envars **list, t_cmnds **args, t_shell *shell)
+void execute_unset(t_envars **list, char **args, t_shell *shell)
 {
 	while (*args)
 	{

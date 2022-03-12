@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/12 19:53:40 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 20:10:33 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,31 @@ void handle_export_without_args(t_envars *list)
 	size = get_list_size(list);
 }
 
+int is_valid_env_key(char *token)
+{
+	if (!ft_isalpha(*token) && *token != "_")
+		return (0);
+	token++;
+	while (*token != '\0')
+	{
+		if (!ft_isascii(*token))
+			return (0);
+		token++;
+	}
+	return (1);
+}
+
+int is_equal_sign(char *token)
+{
+	while (*token != '\0')
+	{
+		if (*token == "=")
+			return (1);
+		token++;
+	}
+	return (0);
+}
+
 void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
 {
 	int i;
@@ -49,20 +74,24 @@ void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
 		shell->exit_status = 0;		
 		handle_export_without_args(*list);
 	}
-	while (commands>args[i])
+	else
 	{
-		// Wrong arguments
-		// bash: export: `.=.': not a valid identifier
-		// Only chars allowed in key
-		if (is_valid_env_key(commands->args[i]) == 1)
+		while (commands>args[i])
 		{
-			shell->exit_status = EXIT_ERR;
-			write(STDERR_FILENO, "minishell: export: `", 20);
-			write(STDERR_FILENO, commands->args[i], ft_strlen(commands->args[i]));
-			write(STDERR_FILENO, "': not a valid identifier\n", 27);
+			if (!is_valid_env_key(commands->args[i]))
+			{
+				shell->exit_status = EXIT_ERR;
+				write(STDERR_FILENO, "minishell: export: `", 20);
+				write(STDERR_FILENO, commands->args[i], ft_strlen(commands->args[i]));
+				write(STDERR_FILENO, "': not a valid identifier\n", 27);
+			}
+			else if (!is_equal_sign(commands->args[i]))
+				shell->exit_status = 0;
+			else
+			{
+				// It will export key-values pairs	
+			}
+			i++;
 		}
-		// Multiple arguments 
-		// It will export all key-values pairs
-		i++;
 	}
 }

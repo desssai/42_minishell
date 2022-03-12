@@ -6,34 +6,32 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/12 20:24:51 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 21:54:06 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
+void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
 {
-	store->command = "export";
-	if (ft_strncmp((const char *)store->command, "pwd", 3) == 0 &&
-		ft_strlen(store->command) == ft_strlen("pwd"))
+	(void)list;
+	// dprintf(2, "%s\n", store->args[0]);
+	if (ft_strncmp(store->args[0], "pwd", 4) == 0)
 		execute_pwd(shell);
-	else if (ft_strncmp((const char *)store->command, "env", 3) == 0 &&
-		ft_strlen(store->command) == ft_strlen("env"))
+	else if (ft_strncmp((const char *)store->args[0], "env", 4) == 0)
 		execute_env(*list, shell);
-	else if (ft_strncmp((const char *)store->command, "unset", 5) == 0 &&
-		ft_strlen(store->command) == ft_strlen("unset"))
-		execute_unset(list, store->args, shell);
-	else if (ft_strncmp((const char *)store->command, "exit", 4) == 0 &&
-		ft_strlen(store->command) == ft_strlen("exit"))
+	else if (ft_strncmp((const char *)store->args[0], "unset", 6) == 0)
+		execute_unset(list, &store->args[1], shell);
+	else if (ft_strncmp((const char *)store->args[0], "exit", 5) == 0)
 		execute_exit(shell, store);
-	else if (ft_strncmp((const char *)store->command, "cd", 2) == 0 &&
-		ft_strlen(store->command) == ft_strlen("cd"))
+	else if (ft_strncmp((const char *)store->args[0], "cd", 3) == 0)
 		execute_cd(list, &store, shell);
-	else if (ft_strncmp((const char *)store->command, "echo", 4) == 0 &&
-		ft_strlen(store->command) == ft_strlen("echo"))
+	else if (ft_strncmp((const char *)store->args[0], "echo", 5) == 0)
 		execute_echo(store, shell);
-	else if (ft_strncmp((const char *)store->command, "export", 6) == 0 &&
-		ft_strlen(store->command) == ft_strlen("export"))
+	else if (ft_strncmp((const char *)store->args[0], "export", 7) == 0)
 		execute_export(list, store, shell);
+	else
+	{
+		// EXECVE
+	}
 }

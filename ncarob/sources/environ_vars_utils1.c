@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environ_vars_utils1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 22:49:33 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 21:15:46 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 21:06:34 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,21 @@ void	ft_print_envars(t_envars *vars)
 	}
 }
 
-void set_shell_level(t_envars *envs, t_shell *shell)
+void	set_shell_level(t_envars *envs, t_shell *shell)
 {
-	t_envars *tmp;
+	t_envars	*tmp;
 
 	tmp = envs;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->key, "SHLVL", 5) == 0 
+		if (ft_strncmp(tmp->key, "SHLVL", 5) == 0
 			&& ft_strlen(tmp->key) == ft_strlen("SHLVL"))
 			shell->shell_level = ft_atoi(tmp->value);
 		tmp = tmp->next;
 	}
 }
 
-char *find_env_node(t_envars *list, const char *key)
+char	*find_env_node(t_envars *list, const char *key)
 {
 	t_envars	*tmp;
 	char		*value;
@@ -77,7 +77,7 @@ char *find_env_node(t_envars *list, const char *key)
 		return (NULL);
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->key, key, ft_strlen(key)) == 0 
+		if (ft_strncmp(tmp->key, key, ft_strlen(key)) == 0
 			&& ft_strlen(tmp->key) == ft_strlen(key))
 			value = tmp->value;
 		tmp = tmp->next;

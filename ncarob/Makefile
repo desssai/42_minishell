@@ -1,8 +1,9 @@
 SRCS	=	./sources/minishell_main.c \
 			./sources/readline_prompt.c \
-			./sources/command_parsing1.c \
-			./sources/command_parsing2.c \
-			./sources/command_parsing3.c \
+			./sources/get_command_information.c \
+			./sources/rm_redirects_spaces_quotes.c \
+			./sources/line_check_and_replace_path.c \
+			./sources/parse_and_add_or_clear_commands.c \
 			./sources/environ_vars_utils1.c \
 			./sources/environ_vars_utils2.c \
 			./sources/sig/catch_signals.c \

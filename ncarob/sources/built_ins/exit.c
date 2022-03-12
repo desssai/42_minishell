@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:52 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/10 21:41:54 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 23:16:49 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,26 @@ bool is_numeric(const char *str)
 void execute_exit(t_shell *shell, t_cmnds *commands)
 {
 	write(STDERR_FILENO, "exit\n", 5);
-	if (commands->args && get_args_quantity(commands->args) != 1)
+	if (commands->args[1])
 	{
-		write(STDERR_FILENO, "minishell: exit: ", 17);
-		write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
-		write(STDERR_FILENO, "too many arguments\n", 20);
-		shell->exit_status = EXIT_ERR;
+		if (commands->args[1] && get_args_quantity(commands->args) != 1)
+		{
+			write(STDERR_FILENO, "minishell: exit: ", 17);
+			write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
+			write(STDERR_FILENO, "too many arguments\n", 20);
+			shell->exit_status = EXIT_ERR;
+		}
+		else if (commands->args[1] && is_numeric(commands->args[1]) == false)
+		{
+			write(STDERR_FILENO, "minishell: exit: ", 17);
+			write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
+			write(STDERR_FILENO, "numeric argument required\n", 26);
+			shell->exit_status = 255;
+			exit(shell->exit_status);
+		}
+		else if (ft_atoi(commands->args[1]) > 255)
+			exit(ft_atoi(commands->args[1]) % 256);
 	}
-	else if (commands->args && is_numeric(commands->args[0]) == false)
-	{
-		write(STDERR_FILENO, "minishell: exit: ", 17);
-		write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
-		write(STDERR_FILENO, "numeric argument required\n", 26);
-		shell->exit_status = 255;
-		exit(shell->exit_status);
-	}
-	else if (ft_atoi(commands->args[0]) > 255)
-		exit(ft_atoi(commands->args[0]) % 256);
 	else
 	{
 		shell->exit_status = 0;

@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/10 22:15:14 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 20:24:51 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
 {
+	store->command = "export";
 	if (ft_strncmp((const char *)store->command, "pwd", 3) == 0 &&
 		ft_strlen(store->command) == ft_strlen("pwd"))
 		execute_pwd(shell);

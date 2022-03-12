@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/10 21:07:41 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/12 20:24:36 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void	add_line_to_history(char *line)
 void	set_shell(t_envars **envs, t_shell *shell)
 {
 	char	*line;
-	t_cmnds	**commands;
+	t_cmnds	*commands;
 	
 	(void)envs;
 	(void)shell;
-	commands = NULL;
+	commands = malloc(sizeof(t_cmnds));
 	line = NULL;
 	while (1)
 	{
@@ -48,8 +48,8 @@ void	set_shell(t_envars **envs, t_shell *shell)
 			break ;
 		else
 		{
-			commands = ft_parse_input(line, *envs);
-			// built_ins(envs, *commands, shell);
+			// commands = ft_parse_input(line, *envs);
+			built_ins(envs, commands, shell);
 			// ft_commands_clear(commands);
 		}
 		add_line_to_history(line);

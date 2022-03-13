@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/12 23:50:29 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/13 18:40:37 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void		tty_hide_input(void);
 // Built-ins.
 void		built_ins(t_envars **list, t_cmnds *store, t_shell *shell);
 void		execute_pwd(t_shell *shell, t_cmnds *commands);
-void		execute_env(t_envars *list, t_shell *shell);
+void		execute_env(t_envars **list, t_shell *shell);
 void		execute_unset(t_envars **list, char **commands, t_shell *shell);
 void		execute_export(t_envars **list, t_cmnds *commands, t_shell *shell);
 void		execute_exit(t_shell *t_shell, t_cmnds *commands);

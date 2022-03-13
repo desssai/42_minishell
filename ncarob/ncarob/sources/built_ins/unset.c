@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:26 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/12 21:41:28 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/13 18:15:26 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 bool is_valid_env_name(const char *str)
 {
+	if (!ft_isalpha(*str) && *str != '_')
+		return (false);
+	str++;
 	while (*str != '\0')
 	{
-		if (!ft_isalnum(*str) && *str != '+' && *str != '*')
+		if (!ft_isalnum(*str) && *str != '+' && *str != '*' && *str != '_')
 			return (false);
 		str++;
 	}

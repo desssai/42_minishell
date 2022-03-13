@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/12 23:59:35 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/13 18:45:42 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,22 +122,42 @@ void display_sorted_list(char **sorted_keys)
 	}
 }
 
+void add_env_key_value_pair(t_envars **list, char *pair)
+{
+	t_envars 	*node;
+	char		**key_value;
+
+	key_value = ft_split(pair, '=');
+	if (!key_value)
+		fatal_error(MLC_ERROR);
+
+	node = (t_envars *)malloc(sizeof(t_envars));
+	if (!node)
+		fatal_error(MLC_ERROR);
+	node->key = key_value[0];
+	node->value = key_value[1];
+	free(key_value[0]);
+	free(key_value[1]);
+	free(key_value);
+	node->next = NULL;
+	// should be sorted
+	ft_envar_add_back(list, node);
+}
+
 void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
 {
 	int		i;
 	char 	**sorted_keys;
 	i = 0;
 
-	// No options
-	// It will simply print all names marked for an export to a child process
 	sorted_keys = NULL;
-	if (!commands->args[1])
+	if (commands->args[1] == NULL)
 	{
-		// sort list "declare -x" and display it
+		dprintf(2, "HERE");
 		shell->exit_status = 0;		
 		sorted_keys = handle_export_without_args(*list);
 		display_sorted_list(sorted_keys);
-	}
+	}	
 	else
 	{
 		while (commands->args[i])
@@ -147,14 +167,16 @@ void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
 				shell->exit_status = EXIT_ERR;
 				write(STDERR_FILENO, "minishell: export: `", 20);
 				write(STDERR_FILENO, commands->args[i], ft_strlen(commands->args[i]));
-				write(STDERR_FILENO, "': not a valid identifier\n", 27);
+				write(STDERR_FILENO, ": not a valid identifier\n", 27);
 			}
 			else if (!is_equal_sign(commands->args[i]))
 				shell->exit_status = 0;
-			// else
-			// {
-			// 	// It will export key-values pairs	
-			// }
+			else
+			{
+				shell->exit_status = 0;
+				check_if_key_exists(commands->args[i]);
+				add_env_key_value_pair(list, commands->args[i]);	
+			}
 			i++;
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_main.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/12 23:58:57 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/13 18:39:35 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
 	if (ft_strncmp(store->args[0], "pwd", 4) == 0)
 		execute_pwd(shell, store);
 	else if (ft_strncmp(store->args[0], "env", 4) == 0)
-		execute_env(*list, shell);
+		execute_env(list, shell);
 	else if (ft_strncmp(store->args[0], "unset", 6) == 0)
 		execute_unset(list, &store->args[1], shell);
 	else if (ft_strncmp(store->args[0], "exit", 5) == 0)

@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 18:45:42 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/14 13:17:22 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
 			else
 			{
 				shell->exit_status = 0;
-				check_if_key_exists(commands->args[i]);
+				// check_if_key_exists(commands->args[i]);
 				add_env_key_value_pair(list, commands->args[i]);	
 			}
 			i++;

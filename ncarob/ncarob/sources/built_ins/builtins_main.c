@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 18:39:35 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/14 13:17:34 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
 	else if (ft_strncmp(store->args[0], "cd", 3) == 0)
 		execute_cd(list, store, shell);
 	else if (ft_strncmp(store->args[0], "echo", 5) == 0)
-		execute_echo(store, shell);
+		execute_echo(store->args, shell);
 	else if (ft_strncmp(store->args[0], "export", 7) == 0)
 		execute_export(list, store, shell);
 	else

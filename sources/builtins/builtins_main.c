@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 16:06:40 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 18:15:04 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,26 @@ void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell, char **envp)
 		execute_export(list, store, shell);
 	else
 	{
-		// char *path;
-		// path = "/bin/ls";
-		// execve(path, store->args, envp);
-		execute_command(list, store, shell, envp);
+		char *path;
+		pid_t pid;
+		path = store->args[0];
+		pid = fork();
+		if (pid == 0)
+		{
+			if (access(path, F_OK) < 0)
+			{
+				write(STDERR_FILENO, "minishell: ", 12);
+				write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
+				write(STDERR_FILENO, ": No such file or directory\n", 29);
+				return ;
+			}
+			execve(path, store->args, envp);
+			write(STDERR_FILENO, "minishell: ", 12);
+			write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
+			write(STDERR_FILENO, " : command not found\n", 21);		
+		}
+		else
+			wait(NULL);
+		// execute_command(list, store, shell, envp);
 	}
 }

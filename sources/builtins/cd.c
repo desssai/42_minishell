@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:12 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 13:36:22 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/15 14:46:43 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void handle_non_existing_path(t_cmnds *commands, t_shell *shell)
 	shell->exit_status = EXIT_ERR;
 }
 
-void change_old_pwd_environ(t_envars **list, char *old_path)
-{
+// void change_old_pwd_environ(t_envars **list, char *old_path)
+// {
 	// t_envars	*old_pwd_node;
 
 	// old_pwd_node = ft_envar_new("OLD_PWD", old_path);
@@ -47,26 +47,7 @@ void change_old_pwd_environ(t_envars **list, char *old_path)
 	// 	fatal_error(MLC_ERROR);
 	// ft_envar_del_one(list, "OLDPWD");
 	// ft_envar_add_back(list, old_pwd_node);
-	(void)old_path;
-	t_envars	*tmp;
-	t_envars 	*new;
-	
-	tmp = *list;
-	dprintf(2, "%s\n", tmp->key);
-	while (tmp)
-	{
-		if ((ft_strncmp(tmp->key, "OLD_PWD", 7) == 0) 
-			&& (ft_strlen(tmp->key) == ft_strlen("OLD_PWD")))
-			break ;
-		tmp = tmp->next;
-	}
-	// tmp->value = NULL;
-	free(tmp);
-	new = malloc(sizeof(t_envars));
-	new->value = ft_strdup(old_path);
-	new->key = "OLD_PATH";
-	tmp = new;
-}
+// }
 
 void change_new_pwd_environ(t_envars **list, char *new_path)
 {
@@ -75,31 +56,11 @@ void change_new_pwd_environ(t_envars **list, char *new_path)
 	
 	tmp = *list;
 
-	new_pwd_node = ft_envar_new("PWD", new_path);
+	new_pwd_node = ft_envar_new("PWD", ft_strdup(new_path));
 	if (!new_pwd_node)
 		fatal_error(MLC_ERROR);
 	ft_envar_del_one(list, "PWD");
-	while (tmp)
-		tmp = tmp->next;
-	tmp->next = new_pwd_node;
-	// ft_envar_add_back(list, new_pwd_node);
-	// t_envars 	*tmp;
-	// t_envars 	*new;
-
-	// tmp = *list;
-	// while (tmp)
-	// {
-	// 	if ((ft_strncmp(tmp->key, "PWD", 3) == 0) 
-	// 		&& (ft_strlen(tmp->key) == ft_strlen("PWD")))
-	// 		break ;
-	// 	tmp = tmp->next;
-	// }
-	// new = malloc(sizeof(t_envars));
-	// new->value = ft_strdup(new_path);
-	// new->key = ft_strdup("PWD");
-	// free(tmp);
-	// tmp = new;
-	// // free(tmp);
+	ft_envar_add_back(list, new_pwd_node);
 }
 
 void execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell)
@@ -123,7 +84,7 @@ void execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell)
 	}
 	if (getcwd(new_path, MAX_PATH) == NULL)
 		fatal_error(MLC_ERROR);
-	// change_new_pwd_environ(list, new_path);
+	change_new_pwd_environ(list, new_path);
 	// change_old_pwd_environ(list, old_path);
 }
 

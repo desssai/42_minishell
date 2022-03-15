@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/15 13:36:43 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:44:29 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_envars	*ft_init_envars(char **envp);
 // Readline and prompt.
 
 void		rl_replace_line(const char *text, int clear_undo);
-void		set_shell(t_envars **envs, t_shell *shell);
+void		set_shell(t_envars **envs, t_shell *shell, char **envp);
 void		add_line_to_history(char *line);
 char		*read_prompt_line(void);
 
@@ -120,7 +120,7 @@ void		catch_signals(void);
 void		execute_export(t_envars **list, t_cmnds *commands, t_shell *shell);
 void		execute_unset(t_envars **list, char **commands, t_shell *shell);
 void		execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell);
-void		built_ins(t_envars **list, t_cmnds *store, t_shell *shell);
+void		built_ins(t_envars **list, t_cmnds *store, t_shell *shell, char **envp);
 void		execute_exit(t_shell *t_shell, t_cmnds *commands);
 void		execute_echo(char **args, t_shell *shell);
 void		execute_pwd(t_shell *shell, t_cmnds *commands);

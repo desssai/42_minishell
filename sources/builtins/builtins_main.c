@@ -6,14 +6,17 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 13:36:03 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 16:06:40 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
+// void execute_command();
+
+void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell, char **envp)
 {
+	(void)envp;
 	if (!store)
 		return ;
 	else if (ft_strncmp(store->args[0], "pwd", 4) == 0)
@@ -32,6 +35,9 @@ void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell)
 		execute_export(list, store, shell);
 	else
 	{
-		// EXECVE
+		// char *path;
+		// path = "/bin/ls";
+		// execve(path, store->args, envp);
+		execute_command(list, store, shell, envp);
 	}
 }

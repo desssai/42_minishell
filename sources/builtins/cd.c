@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:12 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 14:46:43 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:36:28 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,16 @@ void handle_non_existing_path(t_cmnds *commands, t_shell *shell)
 	shell->exit_status = EXIT_ERR;
 }
 
-// void change_old_pwd_environ(t_envars **list, char *old_path)
-// {
-	// t_envars	*old_pwd_node;
+void change_old_pwd_environ(t_envars **list, char *old_path)
+{
+	t_envars	*old_pwd_node;
 
-	// old_pwd_node = ft_envar_new("OLD_PWD", old_path);
-	// if (!old_pwd_node)
-	// 	fatal_error(MLC_ERROR);
-	// ft_envar_del_one(list, "OLDPWD");
-	// ft_envar_add_back(list, old_pwd_node);
-// }
+	old_pwd_node = ft_envar_new("OLD_PWD", ft_strdup(old_path));
+	if (!old_pwd_node)
+		fatal_error(MLC_ERROR);
+	ft_envar_del_one(list, "OLD_PWD");
+	ft_envar_add_back(list, old_pwd_node);
+}
 
 void change_new_pwd_environ(t_envars **list, char *new_path)
 {
@@ -85,18 +85,5 @@ void execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell)
 	if (getcwd(new_path, MAX_PATH) == NULL)
 		fatal_error(MLC_ERROR);
 	change_new_pwd_environ(list, new_path);
-	// change_old_pwd_environ(list, old_path);
+	change_old_pwd_environ(list, old_path);
 }
-
-/*
-	1. save current path (old_path)
-	2. change path (chdir)
-	3. handle if path doesn't exist
-	4. handle if path is empty
-		- find home environ var
-		- if no home, throw an error
-		- else, cd to home
-	5. change OLD_PWD in environ
-	6. change PWD in environ
-	done, you are perfect
-*/

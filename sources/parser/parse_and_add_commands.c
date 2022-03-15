@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_add_commands.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 21:53:08 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/14 19:51:52 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/15 15:50:32 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	ft_print_command_info(t_cmnds *command)
-{
-	int	i;
+// static void	ft_print_command_info(t_cmnds *command)
+// {
+// 	int	i;
 
-	i = -1;
-	printf("COMMAND REDIRECTS:\n");
-	while (command->redirs && command->redirs[++i])
-		printf("%d: %s with mode %d\n", i,
-			command->redirs[i]->filename, command->redirs[i]->mode);
-	i = -1;
-	printf("COMMAND ARGUMETS:\n");
-	while (command->args && command->args[++i])
-		printf("%d: %s\n", i, command->args[i]);
-}
+// 	i = -1;
+// 	// printf("COMMAND REDIRECTS:\n");
+// 	while (command->redirs && command->redirs[++i])
+// 		// printf("%d: %s with mode %d\n", i,
+// 			// command->redirs[i]->filename, command->redirs[i]->mode);
+// 	i = -1;
+// 	// printf("COMMAND ARGUMETS:\n");
+// 	// while (command->args && command->args[++i])
+// 		// printf("%d: %s\n", i, command->args[i]);
+// }
 
 static void	ft_remove_quotes_from_command(t_cmnds *command)
 {
@@ -59,7 +59,7 @@ static t_cmnds	*ft_command_new(char *str, t_envars *envs)
 	ft_get_command_arguments(str, command);
 	ft_remove_quotes_from_command(command);
 	free(str);
-	ft_print_command_info(command);
+	// ft_print_command_info(command);
 	return (command);
 }
 

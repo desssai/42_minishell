@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:52 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 13:36:34 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/15 15:55:04 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void execute_exit(t_shell *shell, t_cmnds *commands)
 		{
 			write(STDERR_FILENO, "minishell: exit: ", 17);
 			write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
-			write(STDERR_FILENO, "too many arguments\n", 20);
+			write(STDERR_FILENO, " too many arguments\n", 20);
 			shell->exit_status = EXIT_ERR;
 		}
 		else if (commands->args[1] && is_numeric(commands->args[1]) == false)
 		{
 			write(STDERR_FILENO, "minishell: exit: ", 17);
 			write(STDERR_FILENO, commands->args[0], ft_strlen(commands->args[0]));
-			write(STDERR_FILENO, "numeric argument required\n", 26);
+			write(STDERR_FILENO, " numeric argument required\n", 26);
 			shell->exit_status = 255;
 			exit(shell->exit_status);
 		}

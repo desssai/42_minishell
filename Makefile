@@ -1,4 +1,5 @@
-SRCS	=	./sources/builtins/cd.c \
+SRCS	=	./sources/executor.c \
+			./sources/builtins/cd.c \
 			./sources/builtins/pwd.c \
 			./sources/builtins/echo.c \
 			./sources/builtins/env.c \

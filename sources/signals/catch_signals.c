@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:17 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 17:55:02 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:56:11 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*sigint_handler(int sig_num)
 {
 	(void)sig_num;
 
-	tty_hide_input();
+	// tty_hide_input();
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

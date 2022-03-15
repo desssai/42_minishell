@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/15 15:54:23 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:58:10 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	set_shell(t_envars **envs, t_shell *shell, char **envp)
 
 	(void)shell;
 	line = NULL;
-	rl_outstream = stderr;
+	// rl_outstream = stderr;
 	while (1)
 	{
 		line = read_prompt_line();

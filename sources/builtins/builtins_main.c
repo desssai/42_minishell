@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 18:15:04 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:57:23 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,30 @@ void	built_ins(t_envars **list, t_cmnds *store, t_shell *shell, char **envp)
 		execute_export(list, store, shell);
 	else
 	{
-		char *path;
-		pid_t pid;
+		char 	*path;
+		pid_t 	pid;
+		// int i = 0;
 		path = store->args[0];
 		pid = fork();
 		if (pid == 0)
 		{
-			if (access(path, F_OK) < 0)
+			if (store->args[1])
 			{
-				write(STDERR_FILENO, "minishell: ", 12);
-				write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
-				write(STDERR_FILENO, ": No such file or directory\n", 29);
-				return ;
+				if (access(path, F_OK) < 0)
+				{
+					write(STDERR_FILENO, "minishell: ", 12);
+					write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
+					write(STDERR_FILENO, ": No such file or directory\n", 29);
+					return ;
+				}
+				else if (store->args[0]) 
+				{
+					execve(path, store->args, envp);
+					write(STDERR_FILENO, "minishell: ", 12);
+					write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
+					write(STDERR_FILENO, " : command not found\n", 21);		
+				}
 			}
-			execve(path, store->args, envp);
-			write(STDERR_FILENO, "minishell: ", 12);
-			write(STDERR_FILENO, store->args[0], ft_strlen(store->args[0]));
-			write(STDERR_FILENO, " : command not found\n", 21);		
 		}
 		else
 			wait(NULL);

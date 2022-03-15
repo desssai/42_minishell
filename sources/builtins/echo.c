@@ -6,13 +6,11 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:05 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/14 21:38:32 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 13:34:22 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-#include "../includes/minishell.h"
 
 void execute_echo(char **args, t_shell *shell)
 {

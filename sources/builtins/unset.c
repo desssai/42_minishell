@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:26 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 13:36:43 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/15 13:31:06 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool is_valid_env_name(const char *str)
 {
 	while (*str != '\0')
 	{
-		if (!ft_isalnum(*str) && *str != '+' && *str != '*')
+		if (!ft_isalnum(*str) && *str != '+' && *str != '*' && *str != '_')
 			return (false);
 		str++;
 	}

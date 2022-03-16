@@ -1,12 +1,14 @@
-SRCS	=	./sources/executor.c \
-			./sources/builtins/cd.c \
+SRCS	=	./sources/builtins/cd.c \
 			./sources/builtins/pwd.c \
 			./sources/builtins/echo.c \
 			./sources/builtins/env.c \
 			./sources/builtins/exit.c \
 			./sources/builtins/unset.c \
 			./sources/builtins/export.c \
-			./sources/builtins/builtins_main.c \
+			./sources/executor/executor.c \
+			./sources/executor/builtins.c \
+			./sources/executor/binary.c \
+			./sources/executor/bins_utils.c \
 			./sources/main/minishell_main.c \
 			./sources/main/readline_prompt.c \
 			./sources/signals/catch_signals.c \

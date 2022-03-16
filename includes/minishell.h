@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 17:37:23 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:35:09 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ void		set_signals(void);
 void		*sigint_handler(int sig_num);
 
 
-
 // Built-ins.
 
 int			is_built_in(char *command);
@@ -136,5 +135,11 @@ void		execute_env(t_envars *list, t_shell *shell, t_list *args);
 // Executor.
 
 void		execute_command(t_cmnds *command, t_shell *shell, char **envp);
+
+// Binary.
+
+void		execute_bin(t_cmnds *command, t_shell *shell, char **envp);
+char		**get_command_arguments(t_list *args);
+
 
 #endif

@@ -6,25 +6,11 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 13:56:57 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:00:47 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-char	*read_prompt_line(void)
-{
-	static char	*line_read;
-
-	line_read = NULL;
-	if (line_read)
-	{
-		free(line_read);
-		line_read = NULL;
-	}
-	line_read = readline("minishell> ");
-	return (line_read);
-}
 
 void	add_line_to_history(char *line)
 {
@@ -38,24 +24,25 @@ void	set_shell(t_envars **envs, t_shell *shell, char **envp)
 	t_cmnds	**commands;
 	int		i;
 
-	(void)shell;
-	(void)envp;
 	line = NULL;
-	rl_outstream = stderr;
+	// rl_outstream = stderr;
 	while (1)
 	{
-		line = read_prompt_line();
+		tty_hide_input();
+		catch_signals();
+		line = readline("minishell> ");
 		if (!line)
-			exit(1);
-		else
 		{
-			i = -1;
-			commands = ft_parse_input(line, *envs);
-			while (commands && commands[++i])
-				built_ins(envs, commands[i], shell, envp);
-			ft_commands_clear(commands);
+			write(STDERR_FILENO, "exit\n", 5);
+			exit(EXIT_ERR);
 		}
 		add_line_to_history(line);
+		i = -1;
+		commands = ft_parse_input(line, *envs);
+		while (commands && commands[++i])
+			execute_command(commands[i], shell, envp);
+		catch_signals();
+		ft_commands_clear(commands);
 		free(line);
 	}
 }

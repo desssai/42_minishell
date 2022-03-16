@@ -33,7 +33,7 @@ HS_LIB	=	readline/libhistory.a
 
 GCC		=	gcc
 
-FLAGS	=	-Wall -Werror -Wextra
+FLAGS	=	-Wall -Werror -Wextra -g
 
 RM		=	rm -f
 

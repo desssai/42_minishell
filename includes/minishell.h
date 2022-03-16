@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 15:03:05 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 17:37:23 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 
 # define CMD_ERROR "minishell: parsing error\n"
 # define MLC_ERROR "minishell: memory allocation error\n"
-
+# define EXEC_ERROR "minishell: execve error\n"
 // Exit status
 
 # define EXIT_ERR 1
@@ -97,6 +97,8 @@ t_envars	*ft_envar_new(char *key, char *value);
 void		ft_envars_clear(t_envars **vars);
 void		ft_print_envars(t_envars *vars);
 t_envars	*ft_init_envars(char **envp);
+int			get_args_quantity(t_list *args);
+
 
 // Readline and prompt.
 
@@ -114,10 +116,14 @@ void		fatal_error(char *msg);
 
 void		tty_hide_input(void);
 void		catch_signals(void);
+void		set_signals(void);
+void		*sigint_handler(int sig_num);
+
+
 
 // Built-ins.
 
-int			is_built_in(t_list *command);
+int			is_built_in(char *command);
 void		built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp);
 void		execute_export(t_envars **list, t_list *args, t_shell *shell);
 void		execute_unset(t_envars **list, t_list *args, t_shell *shell);

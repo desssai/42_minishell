@@ -6,35 +6,36 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 15:02:51 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 16:06:15 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// int is_built_in(char *command)
-// {
-// 	if (ft_strncmp(command, "pwd", 4) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "env", 4) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "unset", 6) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "exit", 5) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "cd", 3) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "echo", 5) == 0)
-// 		return (1);
-// 	else if (ft_strncmp(command, "export", 7) == 0)
-// 		return (1);
-// 	return (0);
-// }
+int is_built_in(char *command)
+{
+	if (ft_strncmp(command, "pwd", 4) == 0)
+		return (1);
+	else if (ft_strncmp(command, "env", 4) == 0)
+		return (1);
+	else if (ft_strncmp(command, "unset", 6) == 0)
+		return (1);
+	else if (ft_strncmp(command, "exit", 5) == 0)
+		return (1);
+	else if (ft_strncmp(command, "cd", 3) == 0)
+		return (1);
+	else if (ft_strncmp(command, "echo", 5) == 0)
+		return (1);
+	else if (ft_strncmp(command, "export", 7) == 0)
+		return (1);
+	return (0);
+}
 
 void	built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp)
 {
 	(void)envp;
 	(void)list;
+	
 	if (!commands->args)
 		return ;
 	else if (ft_strncmp(commands->args->content, "pwd", 4) == 0)

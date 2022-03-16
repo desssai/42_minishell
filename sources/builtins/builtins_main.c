@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 14:38:54 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:02:51 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void	built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp)
 		execute_unset(list, commands->args, shell);
 	else if (ft_strncmp(commands->args->content, "exit", 5) == 0)
 		execute_exit(shell, commands->args);
-	// else if (ft_strncmp(store->args[0], "cd", 3) == 0)
-	// 	execute_cd(list, store, shell);
-	// else if (ft_strncmp(store->args[0], "echo", 5) == 0)
-	// 	execute_echo(store->args, shell);
-	// else if (ft_strncmp(store->args[0], "export", 7) == 0)
-	// 	execute_export(list, store, shell);
+	else if (ft_strncmp(commands->args->content, "cd", 3) == 0)
+		execute_cd(list, commands->args, shell);
+	else if (ft_strncmp(commands->args->content, "echo", 5) == 0)
+		execute_echo(commands->args, shell);
+	else if (ft_strncmp(commands->args->content, "export", 7) == 0)
+		execute_export(list, commands->args, shell);
 }

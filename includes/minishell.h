@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 14:12:11 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:03:05 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ void		catch_signals(void);
 
 int			is_built_in(t_list *command);
 void		built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp);
-void		execute_export(t_envars **list, t_cmnds *commands, t_shell *shell);
+void		execute_export(t_envars **list, t_list *args, t_shell *shell);
 void		execute_unset(t_envars **list, t_list *args, t_shell *shell);
-void		execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell);
+void		execute_cd(t_envars **list, t_list *args, t_shell *shell);
 void		execute_exit(t_shell *shell, t_list *args);
-void		execute_echo(char **args, t_shell *shell);
+void		execute_echo(t_list *args, t_shell *shell);
 void		execute_pwd(t_shell *shell, t_list *args);
 void		execute_env(t_envars *list, t_shell *shell, t_list *args);
 

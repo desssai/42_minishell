@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:12 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 13:59:27 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:54:12 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ void handle_empty_input(t_envars *list, t_shell *shell)
 		handle_unset_home(shell);
 }
 
-// void handle_non_existing_path(t_cmnds *commands, t_shell *shell)
-// {
-// 	write(STDERR_FILENO, "minishell: cd: ", 15);
-// 	write(STDERR_FILENO, commands->args[1], ft_strlen(commands->args[1]));
-// 	write(STDERR_FILENO, ": No such file or directory\n", 29);
-// 	shell->exit_status = EXIT_ERR;
-// }
+void handle_non_existing_path(t_list *args, t_shell *shell)
+{
+	write(STDERR_FILENO, "minishell: cd: ", 15);
+	write(STDERR_FILENO, args->next->content, ft_strlen(args->next->content));
+	write(STDERR_FILENO, ": No such file or directory\n", 29);
+	shell->exit_status = EXIT_ERR;
+}
 
 void change_old_pwd_environ(t_envars **list, char *old_path)
 {
@@ -63,27 +63,25 @@ void change_new_pwd_environ(t_envars **list, char *new_path)
 	ft_envar_add_back(list, new_pwd_node);
 }
 
-// void execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell)
-// {
-// 	t_cmnds *tmp;
-// 	int		status;
-// 	char	old_path[MAX_PATH];
-// 	char	new_path[MAX_PATH];
+void execute_cd(t_envars **list, t_list *args, t_shell *shell)
+{
+	int		status;
+	char	old_path[MAX_PATH];
+	char	new_path[MAX_PATH];
 
-// 	tmp = commands;
-// 	shell->exit_status = 0;
-// 	if (getcwd(old_path, MAX_PATH) == NULL)
-// 		fatal_error(MLC_ERROR);
-// 	if (tmp->args[1] == NULL)
-// 		handle_empty_input(*list, shell);
-// 	else 
-// 	{
-// 		status = chdir(tmp->args[1]);
-// 		if (status == -1)
-// 			handle_non_existing_path(commands, shell);
-// 	}
-// 	if (getcwd(new_path, MAX_PATH) == NULL)
-// 		fatal_error(MLC_ERROR);
-// 	change_new_pwd_environ(list, new_path);
-// 	change_old_pwd_environ(list, old_path);
-// }
+	shell->exit_status = 0;
+	if (getcwd(old_path, MAX_PATH) == NULL)
+		fatal_error(MLC_ERROR);
+	if (args->next == NULL)
+		handle_empty_input(*list, shell);
+	else 
+	{
+		status = chdir(args->next->content);
+		if (status == -1)
+			handle_non_existing_path(args, shell);
+	}
+	if (getcwd(new_path, MAX_PATH) == NULL)
+		fatal_error(MLC_ERROR);
+	change_new_pwd_environ(list, new_path);
+	change_old_pwd_environ(list, old_path);
+}

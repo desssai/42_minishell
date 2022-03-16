@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 20:09:53 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 17:47:51 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:27:11 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char **get_command_arguments(t_list *args)
 	cmd_args = (char **)malloc(sizeof(char *) * quan);
 	if (!cmd_args)
 		fatal_error(MLC_ERROR);
-	while (i < quan && curr)
+	while (i < quan)
 	{
 		cmd_args[i] = ft_strdup(curr->content);
 		if (!cmd_args[i])
@@ -37,12 +37,13 @@ char **get_command_arguments(t_list *args)
 	return (cmd_args);
 }
 
+
 void execute_system_bin(t_cmnds *command, t_shell *shell, char **envp)
 {
-	char 	*path;
-	pid_t 	pid;
-	char	**cmd_args;
-	int 	status;
+	pid_t 		pid;
+	char 		*path;
+	char		**cmd_args;
+	int			status;
 	
 	(void)shell;
 	cmd_args = get_command_arguments(command->args);
@@ -50,25 +51,19 @@ void execute_system_bin(t_cmnds *command, t_shell *shell, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		// if (access(path, F_OK) < 0)
-		// {
-		// 	write(STDERR_FILENO, "minishell: ", 12);
-		// 	write(STDERR_FILENO, command->args[0], ft_strlen(command->args[0]));
-		// 	write(STDERR_FILENO, ": No such file or directory\n", 29);
-		// 	return ;
-		// }
-		if (ft_strncmp(command->args->content, "", 1) != 0) 
+		if (execve(path, cmd_args, envp) == -1)
 		{
-			execve(path, cmd_args, envp);
-			free(cmd_args);
 			write(STDERR_FILENO, "minishell: ", 12);
 			write(STDERR_FILENO, command->args->content, ft_strlen(command->args->content));
 			write(STDERR_FILENO, " : command not found\n", 21);
+			exit(EXIT_ERR);
 		}
+		free(cmd_args);
 	}
 	else
 	{
-		// catch_signals();		
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, (void *)sigint_handler);
 		waitpid(-1, &status, 0);
 	}
 }

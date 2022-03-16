@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 18:23:49 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 18:00:47 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 18:27:21 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@ void	set_shell(t_envars **envs, t_shell *shell, char **envp)
 
 	line = NULL;
 	// rl_outstream = stderr;
-	while (1)
+	while (true)
 	{
-		tty_hide_input();
-		catch_signals();
 		line = readline("minishell> ");
 		if (!line)
 		{
@@ -39,9 +37,11 @@ void	set_shell(t_envars **envs, t_shell *shell, char **envp)
 		add_line_to_history(line);
 		i = -1;
 		commands = ft_parse_input(line, *envs);
-		while (commands && commands[++i])
-			execute_command(commands[i], shell, envp);
-		catch_signals();
+		if (*line != '\0')
+		{
+			while (commands && commands[++i])
+				execute_command(commands[i], shell, envp);	
+		}
 		ft_commands_clear(commands);
 		free(line);
 	}

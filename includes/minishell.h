@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 18:35:09 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 22:38:49 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,12 @@
 
 # define MAX_PATH 1024
 
-# define CMD_ERROR "minishell: parsing error\n"
-# define MLC_ERROR "minishell: memory allocation error\n"
-# define EXEC_ERROR "minishell: execve error\n"
+# define CMD_ERROR 		"minishell: parsing error\n"
+# define MLC_ERROR 		"minishell: memory allocation error\n"
+# define EXEC_ERROR 	"minishell: execve error\n"
+# define FORK_ERR		"minishell: fork error\n"
+# define WAITPID_ERR	"minishell: waitpid error\n"
+
 // Exit status
 
 # define EXIT_ERR 1

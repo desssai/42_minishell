@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environ_vars_utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 19:33:11 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/15 14:52:24 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/15 18:08:57 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void	ft_envars_clear(t_envars **vars)
 		(*vars) = (*vars)->next;
 		if (prev)
 		{
-			// free(prev->key);
-			// free(prev->value); 		// check leaks
+			free(prev->key);
+			free(prev->value);
 			free(prev);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/15 20:26:59 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:12:11 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_redirs
 typedef struct s_comnds
 {
 	t_redirs		**redirs;
-	char			**args;
+	t_list			*args;
 	t_envars		*envs;
 }	t_cmnds;
 
@@ -117,19 +117,18 @@ void		catch_signals(void);
 
 // Built-ins.
 
-int			is_built_in(char *command);
-void		built_ins(t_envars **list, t_cmnds *store, t_shell *shell, char **envp);
+int			is_built_in(t_list *command);
+void		built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp);
 void		execute_export(t_envars **list, t_cmnds *commands, t_shell *shell);
-void		execute_unset(t_envars **list, char **commands, t_shell *shell);
+void		execute_unset(t_envars **list, t_list *args, t_shell *shell);
 void		execute_cd(t_envars **list, t_cmnds *commands, t_shell *shell);
-void		execute_exit(t_shell *t_shell, t_cmnds *commands);
+void		execute_exit(t_shell *shell, t_list *args);
 void		execute_echo(char **args, t_shell *shell);
-void		execute_pwd(t_shell *shell, t_cmnds *commands);
-void		execute_env(t_envars *list, t_shell *shell, char **args);
+void		execute_pwd(t_shell *shell, t_list *args);
+void		execute_env(t_envars *list, t_shell *shell, t_list *args);
 
 // Executor.
 
 void		execute_command(t_cmnds *command, t_shell *shell, char **envp);
-
 
 #endif

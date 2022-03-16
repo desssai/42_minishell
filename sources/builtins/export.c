@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/15 14:31:56 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/16 14:00:05 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,39 +149,39 @@ void check_if_key_exists(t_envars **list, char *arg)
 	free(key_value);
 }
 
-void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
-{
-	int		i;
-	char 	**sorted_keys;
+// void execute_export(t_envars **list, t_cmnds *commands, t_shell *shell)
+// {
+// 	int		i;
+// 	char 	**sorted_keys;
 
-	i = 1;
-	sorted_keys = NULL;
-	if (!commands->args[i])
-	{
-		shell->exit_status = 0;		
-		sorted_keys = handle_export_without_args(*list);
-		display_sorted_list(sorted_keys);
-	}
-	else
-	{
-		while (commands->args[i])
-		{
-			if (!is_valid_env_key(commands->args[i]))
-			{
-				shell->exit_status = EXIT_ERR;
-				write(STDERR_FILENO, "minishell: export: `", 20);
-				write(STDERR_FILENO, commands->args[i], ft_strlen(commands->args[i]));
-				write(STDERR_FILENO, "': not a valid identifier\n", 27);
-			}
-			else if (!is_equal_sign(commands->args[i]))
-				shell->exit_status = 0;
-			else
-			{	
-				shell->exit_status = 0;
-				check_if_key_exists(list, commands->args[i]);
-				add_env_key_value_pair(list, commands->args[i]);
-			}
-			i++;
-		}
-	}
-}
+// 	i = 1;
+// 	sorted_keys = NULL;
+// 	if (!commands->args[i])
+// 	{
+// 		shell->exit_status = 0;		
+// 		sorted_keys = handle_export_without_args(*list);
+// 		display_sorted_list(sorted_keys);
+// 	}
+// 	else
+// 	{
+// 		while (commands->args[i])
+// 		{
+// 			if (!is_valid_env_key(commands->args[i]))
+// 			{
+// 				shell->exit_status = EXIT_ERR;
+// 				write(STDERR_FILENO, "minishell: export: `", 20);
+// 				write(STDERR_FILENO, commands->args[i], ft_strlen(commands->args[i]));
+// 				write(STDERR_FILENO, "': not a valid identifier\n", 27);
+// 			}
+// 			else if (!is_equal_sign(commands->args[i]))
+// 				shell->exit_status = 0;
+// 			else
+// 			{	
+// 				shell->exit_status = 0;
+// 				check_if_key_exists(list, commands->args[i]);
+// 				add_env_key_value_pair(list, commands->args[i]);
+// 			}
+// 			i++;
+// 		}
+// 	}
+// }

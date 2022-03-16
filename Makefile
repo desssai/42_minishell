@@ -6,18 +6,17 @@ SRCS	=	./sources/executor.c \
 			./sources/builtins/exit.c \
 			./sources/builtins/unset.c \
 			./sources/builtins/export.c \
+			./sources/builtins/builtins_main.c \
 			./sources/main/minishell_main.c \
 			./sources/main/readline_prompt.c \
 			./sources/signals/catch_signals.c \
-			./sources/builtins/builtins_main.c \
 			./sources/environ/environ_vars_utils1.c \
 			./sources/environ/environ_vars_utils2.c \
 			./sources/parser/clear_commands_array.c \
 			./sources/parser/parse_and_add_commands.c \
 			./sources/parser/remove_redirects_spaces.c \
+			./sources/parser/get_command_information.c \
 			./sources/parser/remove_quotes_change_path.c \
-			./sources/parser/get_command_arguments_array.c \
-			./sources/parser/get_command_redirects_array.c \
 			./sources/parser/get_total_commands_validate_line.c \
 
 OBJS	=	$(SRCS:.c=.o)
@@ -42,7 +41,7 @@ RM		=	rm -f
 	$(GCC) $(FLAGS) -I$(HEADS) -c $< -o $@ 
 
 $(NAME): $(OBJS) ./libft/libft.h
-	$(MAKE) -C libft all
+	$(MAKE) -C libft bonus
 	$(GCC) $(FLAGS) $(OBJS) $(LNAME) $(RL_LIB) $(HS_LIB) -ltermcap -L/Users/${USER}/.brew/opt/readline/lib -lreadline -o $(NAME)
 
 all:	$(NAME)

@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:42:20 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/13 13:36:40 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/16 13:58:20 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../../includes/minishell.h"
 
-void execute_pwd(t_shell *shell, t_cmnds *commands)
+void execute_pwd(t_shell *shell, t_list *args)
 {
 	char dir[MAX_PATH];
 	
-	if (commands->args[1])
+	if (args->next)
 	{
 		shell->exit_status = 1;
 		write(STDERR_FILENO, "pwd: too many arguments\n", 25);

@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/16 22:38:49 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/23 18:40:35 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
+# include <dirent.h>
 # include <termios.h>
 # include <stdbool.h>
 # include <sys/wait.h>
@@ -39,10 +40,12 @@
 # define EXEC_ERROR 	"minishell: execve error\n"
 # define FORK_ERR		"minishell: fork error\n"
 # define WAITPID_ERR	"minishell: waitpid error\n"
+# define WLC_ERROR		"minishell: no matches found: %s\n"
+# define PIPES_ERR		"minishell: pipes error\n" 
 
 // Exit status
 
-# define EXIT_ERR 1
+# define EXIT_ERR	1
 
 // General shell structure.
 
@@ -52,6 +55,9 @@ typedef struct s_shell
 	int				shell_level;
 	int				fd_in;
 	int				fd_out;
+	int				process_count;
+	int				**pipes;
+	// char 			*here_doc;
 }				t_shell;
 
 // Environment variables list structure.
@@ -76,16 +82,17 @@ typedef struct s_comnds
 	t_redirs		**redirs;
 	t_list			*args;
 	t_envars		*envs;
+	t_shell			*shell;
 }	t_cmnds;
 
 // Command Parser.
 
 void		ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote);
+t_cmnds		**ft_parse_input(char *str, t_envars *envs, t_shell *shell);
 void		ft_get_command_arguments(char *line, t_cmnds *command);
 void		ft_get_command_redirects(char *line, t_cmnds *command);
-char		*ft_remove_quotes(char *str, t_envars *envs);
-t_cmnds		**ft_parse_input(char *str, t_envars *envs);
-void		ft_commands_clear(t_cmnds **commands);
+char		*ft_remove_quotes(char *str, t_cmnds *command);
+void		ft_commands_clear(t_cmnds ***commands);
 int			ft_check_line_part_one(char *str);
 int			ft_check_line_part_two(char *str);
 char		*ft_remove_redirects(char *str);
@@ -106,7 +113,7 @@ int			get_args_quantity(t_list *args);
 // Readline and prompt.
 
 void		rl_replace_line(const char *text, int clear_undo);
-void		set_shell(t_envars **envs, t_shell *shell, char **envp);
+void		set_shell(t_envars **envs, t_shell **shell, char **envp);
 void		add_line_to_history(char *line);
 char		*read_prompt_line(void);
 
@@ -132,17 +139,35 @@ void		execute_unset(t_envars **list, t_list *args, t_shell *shell);
 void		execute_cd(t_envars **list, t_list *args, t_shell *shell);
 void		execute_exit(t_shell *shell, t_list *args);
 void		execute_echo(t_list *args, t_shell *shell);
-void		execute_pwd(t_shell *shell, t_list *args);
+void		execute_pwd(t_shell *shell, t_list *args, t_envars *list);
 void		execute_env(t_envars *list, t_shell *shell, t_list *args);
 
 // Executor.
 
-void		execute_command(t_cmnds *command, t_shell *shell, char **envp);
+void		execute_command(t_cmnds *command, t_shell **shell, char **envp);
+int			handle_pipes_redirects(t_cmnds *command, t_shell *shell);
+void 		launch_command(t_cmnds *command, char **envp, t_shell **shell);
+
+// Pipes
+int			**pipes_loop(int cmnds);
+void 		open_pipes(int **pipes, int cmnds);
+void		close_all_pipes(int **pipes);
 
 // Binary.
 
-void		execute_bin(t_cmnds *command, t_shell *shell, char **envp);
+void		execute_bin(t_cmnds **commands, t_shell **shell, char **envp);
 char		**get_command_arguments(t_list *args);
+void		get_command_position(t_cmnds *command, t_shell **shell, int cmd_pos);
 
+
+// Wildcards replacement
+
+void		ft_lst_insert_lst(t_list **lst1, t_list *curr, t_list *lst2);
+void		ft_free_command_redirects(t_cmnds *command);
+int			ft_replace_wildcards(t_cmnds *command, t_list *args_copy);
+void		ft_get_wildcard_pieces(char *str, char **pieces);
+void		ft_lst_del_value(t_list **lst, char *value);
+char		**ft_init_wildcard_pieces(char *str);
+int			ft_array_clear(char ***array);
 
 #endif

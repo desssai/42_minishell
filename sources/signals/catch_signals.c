@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   catch_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:17 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 17:42:31 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/24 13:26:31 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	*sigint_handler(int sig_num)
 
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	rl_redisplay();
 	return (NULL);
 }

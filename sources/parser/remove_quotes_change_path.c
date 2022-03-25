@@ -6,30 +6,53 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 15:01:55 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/14 19:53:17 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/03/24 14:08:11 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*ft_replace_path(char *str, int *index, t_envars *envs)
+static int	ft_get_delta_of_indexes(char *str, int i,
+	char **value, t_cmnds *command)
 {
-	char	*value;
-	int		i;
+	int	j;
+
+	j = 1;
+	if (str[i + 1] && ft_isdigit(str[i + 1]))
+		j = 2;
+	else if (str[i + 1] && str[i + 1] == '?')
+	{
+		if (command && command->shell)
+				*value = ft_itoa(command->shell->exit_status);
+		j = 2;
+	}
+	else
+		while (str[++i] && !ft_strchr("\'\"$ =*.", str[i]))
+			j++;
+	return (j);
+}
+
+static char	*ft_replace_path(char *str, int *index, t_cmnds *command)
+{
+	char		*value;
+	t_envars	*env;
+	int			i;
 
 	i = *index;
 	value = NULL;
-	while (str[++i] && !ft_strchr("\'\"$ ", str[i]))
-		;
-	while (!value && envs)
+	env = command->envs;
+	i += ft_get_delta_of_indexes(str, i, &value, command);
+	while (!value && env)
 	{
-		if (!ft_strncmp(&str[*index + 1], envs->key, i - *index - 1)
-			&& (i - *index - 1) == (int)ft_strlen(envs->key))
-			value = ft_strdup(envs->value);
-		envs = envs->next;
+		if (!ft_strncmp(&str[*index + 1], env->key, i - *index - 1)
+			&& (i - *index - 1) == (int)ft_strlen(env->key))
+			value = ft_strdup(env->value);
+		env = env->next;
 	}
-	if (!value && (i - *index - 1))
+	if (!value && (i - *index - 1) && !ft_strchr(&str[i], '\"'))
 		value = ft_strdup("");
+	else if (!value && (i - *index - 1) && ft_strchr(&str[i], '\"'))
+		value = ft_strdup(" ");
 	else if (!value && !(i - *index - 1))
 		value = ft_strdup("$");
 	value = ft_strjoin(ft_substr(str, 0, *index), value, 1, 1);
@@ -39,7 +62,8 @@ static char	*ft_replace_path(char *str, int *index, t_envars *envs)
 	return (value);
 }
 
-static char	*ft_strip_quotes(char *str, int *index, char quote, t_envars *envs)
+static char	*ft_strip_quotes(char *str, int *index,
+	char quote, t_cmnds *command)
 {
 	int		i;
 	char	*tmp[3];
@@ -47,7 +71,7 @@ static char	*ft_strip_quotes(char *str, int *index, char quote, t_envars *envs)
 	i = *index;
 	while (str[++i] && str[i] != quote)
 		if (str[i] == '$' && quote != '\'')
-			str = ft_replace_path(str, &i, envs);
+			str = ft_replace_path(str, &i, command);
 	if (i - *index > 1)
 	{
 		tmp[0] = ft_substr(str, 0, *index);
@@ -68,7 +92,7 @@ static char	*ft_strip_quotes(char *str, int *index, char quote, t_envars *envs)
 	return (tmp[0]);
 }
 
-char	*ft_remove_quotes(char *str, t_envars *envs)
+char	*ft_remove_quotes(char *str, t_cmnds *command)
 {
 	int	i;
 
@@ -76,11 +100,11 @@ char	*ft_remove_quotes(char *str, t_envars *envs)
 	while (str && str[++i])
 	{
 		if (str[i] == '\'')
-			str = ft_strip_quotes(str, &i, '\'', NULL);
+			str = ft_strip_quotes(str, &i, '\'', command);
 		else if (str[i] == '\"')
-			str = ft_strip_quotes(str, &i, '\"', envs);
+			str = ft_strip_quotes(str, &i, '\"', command);
 		else if (str[i] == '$')
-			str = ft_replace_path(str, &i, envs);
+			str = ft_replace_path(str, &i, command);
 	}
 	return (str);
 }

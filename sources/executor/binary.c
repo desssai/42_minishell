@@ -6,7 +6,7 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 18:32:06 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/16 23:33:55 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:51:18 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,20 @@
 
 void	get_child_exit_status(int *status)
 {
-	if (WIFEXITED(status))						// не равен нулю, если процесс завершился успешно
-		*status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))				// возвращает истинное значение, если дочерний процесс завершился из-за необработанного сигнала
-		*status = WTERMSIG(status);
-	else if (WIFSTOPPED(status))
-		*status = WSTOPSIG(status);				// возвращает истинное значение, если дочерний процесс был остановлен
+	if (WIFEXITED(*status))						// не равен нулю, если процесс завершился успешно
+		*status = WEXITSTATUS(*status);
+	else if (WIFSIGNALED(*status))				// возвращает истинное значение, если дочерний процесс завершился из-за необработанного сигнала
+		*status = WTERMSIG(*status);
+	else if (WIFSTOPPED(*status))
+		*status = WSTOPSIG(*status);				// возвращает истинное значение, если дочерний процесс был остановлен
 	else
 		*status = EXIT_ERR;
+}
+
+void	ft_sig_heredoc(int sig)
+{
+	(void)sig;
+	exit(EXIT_ERR);
 }
 
 char **parse_paths(t_envars *list)
@@ -66,60 +72,252 @@ void exec_system_bin(t_cmnds *command, char **path, char ***cmd_args)
 			break ;
 		free(paths[i]);
 		free(*path);
+		*path = NULL;
 		i++;
 	}
-	if (*path == NULL)
+	if (!*path)
 	{
 		*path = ft_strjoin("/", (*cmd_args)[0], 0, 0);
-		if (*path == NULL)
+		if (!*path)
 			fatal_error(MLC_ERROR);
+		if (access(*path, F_OK))
+			*path = NULL;
 	}
 	free(paths);
 }
 
-void launch_command(t_cmnds *command, char **envp)
+void	exec_non_system_bin(t_cmnds *command, char **path, char ***cmdargs)
+{
+	*cmdargs = ft_split(command->args->content, ' ');
+	if (!*cmdargs)
+		fatal_error(MLC_ERROR);
+	*path = (*cmdargs)[0];
+}
+
+void c_fork(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+}
+
+void launch_command(t_cmnds *command, char **envp, t_shell **shell)
 {
 	char	*path;
 	char	**cmdargs;
+	int		exec_res;
 
+	(void)shell;
 	path = NULL;
 	cmdargs = get_command_arguments(command->args);
 	if (!cmdargs)
 		fatal_error(MLC_ERROR);
-	// if (ft_strchr(cmd, '/') != NULL)
-	// 	exec_non_system_bin(command, &path, &cmdargs);
-	// else
-	exec_system_bin(command, &path, &cmdargs);
-	if (execve(path, cmdargs, envp) == -1)
+	signal(SIGINT, (void *)c_fork);
+	if (is_built_in(command->args->content))
+	{
+		built_ins(&(command->envs), command, *shell, envp);
+		exit(0);		
+	}
+	else if (ft_strchr(command->args->content, '/') != NULL)
+		exec_non_system_bin(command, &path, &cmdargs);
+	else
+		exec_system_bin(command, &path, &cmdargs);
+	(*shell)->exit_status = 127;
+	if (path == NULL && !find_env_node(command->envs, "PATH"))
 	{
 		write(STDERR_FILENO, "minishell: ", 11);		
 		write(STDERR_FILENO, cmdargs[0], ft_strlen(cmdargs[0]));
 		write(STDERR_FILENO, ": No such file or directory\n", 28);
-		exit(1);		
+		exit((*shell)->exit_status);
+	}
+	else if (path == NULL)
+	{
+		write(STDERR_FILENO, "minishell: ", 11);		
+		write(STDERR_FILENO, cmdargs[0], ft_strlen(cmdargs[0]));
+		write(STDERR_FILENO, ": command not found\n", 20);
+		exit((*shell)->exit_status);
+	}
+	else 
+	{	
+		(*shell)->exit_status = 0;
+		exec_res = execve(path, cmdargs, envp);
+		if (exec_res == -1)
+		{
+			(*shell)->exit_status = 127;
+			write(STDERR_FILENO, "minishell: ", 11);		
+			write(STDERR_FILENO, cmdargs[0], ft_strlen(cmdargs[0]));
+			write(STDERR_FILENO, ": command not found\n", 20);
+		}
+		if (exec_res == -1 && cmdargs && *cmdargs)
+		{
+			(*shell)->exit_status = 127;
+			write(STDERR_FILENO, "minishell: ", 11);		
+			write(STDERR_FILENO, cmdargs[0], ft_strlen(cmdargs[0] + 1));
+			write(STDERR_FILENO, ": No such file or directory\n", 28);
+			exit((*shell)->exit_status);
+		}
+	}
+	(*shell)->exit_status = EXIT_ERR;
+	free(cmdargs);
+	free(path);
+	exit((*shell)->exit_status);
+}
+
+void here_doc(char *del)
+{
+	char 	*line;
+	int 	fd;
+
+	fd = open("tmp", O_CREAT | O_RDWR | O_TRUNC, 777);
+	while (true)
+	{
+		line = get_next_line(0);
+		if (!line)
+			break ;
+		if (ft_strncmp(del, line, (ft_strlen(del))== 0))
+			break ;
+		write(fd, line, ft_strlen(line) + 1);
+		free(line);
+	}
+	close(fd);
+	fd = open("tmp", O_CREAT | O_RDWR | O_TRUNC, 777);
+	dup2(fd, STDIN_FILENO);
+}
+
+int open_files(t_redirs *elem, t_shell *shell, int fd)
+{	
+	(void)shell;
+	if (elem->mode == 0)
+	{
+		fd = open(elem->filename, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		if (fd == -1)
+			fatal_error("open\n");
+		dup2(fd, STDOUT_FILENO);
+	}
+	if (elem->mode == 1)
+	{
+		fd = open(elem->filename, O_RDONLY, 0777);
+		if (fd == -1)
+		{
+			shell->exit_status = 1;
+			write(2, "minishell: ", 11);
+			write(2, elem->filename, ft_strlen(elem->filename) + 1);
+			write(2, ": No such file or directory", 28);
+		}
+		dup2(fd, STDIN_FILENO);
+	}
+	if (elem->mode == 2)
+	{
+		fd = open(elem->filename, O_CREAT | O_WRONLY | O_APPEND, 0777);
+		if (fd == -1)
+			fatal_error("open\n");
+		dup2(fd, STDOUT_FILENO);
+	}
+	if (elem->mode == 3)
+	{
+		here_doc(elem->filename);
+	}
+	return (fd);
+}
+
+int  handle_pipes_redirects(t_cmnds *command, t_shell *shell)
+{
+	int i;
+	int fd = 0;
+	
+	i = 0;
+	while (command->redirs && command->redirs[i])
+	{
+		fd = open_files(command->redirs[i], shell, fd);
+		i++;
+	}
+	return (fd);
+}
+
+void wait_child_processes(t_shell **shell, pid_t id)
+{
+	int		status;
+	pid_t 	process;
+	int		i;
+
+	status = 0;
+	i = 0;
+	while (i < (*shell)->process_count)
+	{
+		process = waitpid(-1, &status, 0);
+		if (id == process)
+		{
+			get_child_exit_status(&status);
+			(*shell)->exit_status = status;			
+		}
+		i++;
 	}
 }
 
+void handle_first_command(t_cmnds *command, t_shell **shell)
+{
+	int fd_in;
+	
+	fd_in = handle_pipes_redirects(command, *shell);
+	dup2((*shell)->pipes[0][1], STDOUT_FILENO);
+	close((*shell)->pipes[0][0]);
+}
 
-void execute_bin(t_cmnds *command, t_shell *shell, char **envp)
+void handle_last_command(t_cmnds *command, t_shell **shell)
+{
+	int fd_out;
+
+	fd_out = handle_pipes_redirects(command, *shell);	
+	dup2((*shell)->pipes[(*shell)->process_count - 2][0], STDIN_FILENO);
+	close((*shell)->pipes[(*shell)->process_count - 2][1]);
+}
+
+void	handle_standard_command(t_cmnds *command, t_shell **shell, int cmd_pos)
+{
+	(void)command;
+	dup2((*shell)->pipes[cmd_pos - 1][0], STDIN_FILENO);
+	dup2((*shell)->pipes[cmd_pos][1], STDOUT_FILENO);
+}
+
+void get_command_position(t_cmnds *command, t_shell **shell, int cmd_pos)
+{
+	if (cmd_pos == 0)
+		handle_first_command(command, shell);
+	else if (cmd_pos == (*shell)->process_count - 1)
+		handle_last_command(command, shell);
+	else
+		handle_standard_command(command, shell, cmd_pos);
+}
+
+void execute_bin(t_cmnds **commands, t_shell **shell, char **envp)
 {
 	pid_t	pid;
-	int		status;
+	int		counter;
 
-	(void)command;
-	(void)envp;
-	
-	pid = fork();
-	if (pid == 0)
-		launch_command(command, envp);          	// child process
-	else if (pid == -1)
-		fatal_error(FORK_ERR);     		// handle error
-	else if (pid > 0)
+	counter = 0;
+	(*shell)->exit_status = 0;
+	while (commands[counter])
 	{
-		if (waitpid(-1, &status, 0) == -1)
-			fatal_error(WAITPID_ERR);
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, (void *)sigint_handler);
-		// signal(EOF, (void *)eof_handler);
-		get_child_exit_status(&shell->exit_status);		// parent process
+		pid = fork();
+		if (pid == 0)
+		{
+			if ((*shell)->process_count > 1)
+			{
+				get_command_position(commands[counter], shell, counter);
+				close_all_pipes((*shell)->pipes);
+			}
+			handle_pipes_redirects(commands[counter], *shell);
+			launch_command(commands[counter], envp, shell);
+		}
+		else if (pid == -1)
+		{
+			write(2, "minishell: fork: Resource temporarily unavailable\n", 50);
+			(*shell)->exit_status = 128;
+			exit(128);
+		}
+		counter++;
 	}
+	close_all_pipes(((*shell)->pipes));
+	wait_child_processes(shell, pid);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, (void *)sigint_handler);
 }

@@ -9,6 +9,7 @@ SRCS	=	./sources/builtins/cd.c \
 			./sources/executor/builtins.c \
 			./sources/executor/binary.c \
 			./sources/executor/bins_utils.c \
+			./sources/executor/pipes.c \
 			./sources/main/minishell_main.c \
 			./sources/main/readline_prompt.c \
 			./sources/signals/catch_signals.c \
@@ -18,7 +19,9 @@ SRCS	=	./sources/builtins/cd.c \
 			./sources/parser/parse_and_add_commands.c \
 			./sources/parser/remove_redirects_spaces.c \
 			./sources/parser/get_command_information.c \
+			./sources/parser/wildcard_find_all_utils.c \
 			./sources/parser/remove_quotes_change_path.c \
+			./sources/parser/wildcard_find_all_arguments.c \
 			./sources/parser/get_total_commands_validate_line.c \
 
 OBJS	=	$(SRCS:.c=.o)
@@ -44,7 +47,7 @@ RM		=	rm -f
 
 $(NAME): $(OBJS) ./libft/libft.h
 	$(MAKE) -C libft bonus
-	$(GCC) $(FLAGS) $(OBJS) $(LNAME) $(RL_LIB) $(HS_LIB) -ltermcap -L/Users/${USER}/.brew/opt/readline/lib -lreadline -o $(NAME)
+	$(GCC) $(FLAGS) $(OBJS) $(LNAME) $(RL_LIB) $(HS_LIB) -ltermcap -lreadline -o $(NAME)
 
 all:	$(NAME)
 

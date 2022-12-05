@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/15 20:09:53 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/21 19:09:25 by wurrigon         ###   ########.fr       */
+/*   Created: 2022/03/10 21:41:59 by wurrigon          #+#    #+#             */
+/*   Updated: 2022/03/24 22:06:06 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-// void execute_command(t_cmnds *command, t_shell **shell, char **envp)
-// {
-// 	int lol;
-	
-// 	if (is_built_in(command->args->content))
-// 	{
-// 		lol = handle_pipes_redirects(command, *shell);		
-// 		built_ins(&(command->envs), command, *shell, envp);
-// 		dup2(lol, STDOUT_FILENO);
-// 	}
-// 	else
-// 		execute_bin(command, shell, envp);
-// }
+void	execute_env(t_envars *list, t_shell **shell)
+{
+	(*shell)->exit_status = 0;
+	while (list)
+	{
+		write(STDOUT_FILENO, list->key, ft_strlen(list->key));
+		write(STDOUT_FILENO, "=", 1);
+		write(STDOUT_FILENO, list->value, ft_strlen(list->value));
+		write(STDOUT_FILENO, "\n", 1);
+		list = list->next;
+	}
+}

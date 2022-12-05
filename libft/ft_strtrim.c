@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 18:36:13 by ncarob            #+#    #+#             */
-/*   Updated: 2021/10/14 18:26:47 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/12/05 11:38:07 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,8 @@ static size_t	get_last_occurance(char const *s, char const *set)
 	short	c;
 	size_t	i;
 	size_t	j;
-	size_t	len;
 
 	i = ft_strlen(s);
-	len = i;
 	while (--i > 0)
 	{
 		j = -1;

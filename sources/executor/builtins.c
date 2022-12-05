@@ -6,13 +6,13 @@
 /*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 19:44:28 by wurrigon          #+#    #+#             */
-/*   Updated: 2022/03/21 18:54:02 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/03/24 22:10:17 by wurrigon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int is_built_in(char *command)
+int	is_built_in(char *command)
 {
 	if (ft_strncmp(command, "pwd", 4) == 0)
 		return (1);
@@ -31,7 +31,8 @@ int is_built_in(char *command)
 	return (0);
 }
 
-void	built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp)
+void	built_ins(t_envars **list, t_cmnds *commands, t_shell **shell,
+			char **envp)
 {
 	(void)envp;
 	if (!commands->args)
@@ -39,7 +40,7 @@ void	built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp)
 	if (ft_strncmp(commands->args->content, "pwd", 4) == 0)
 		execute_pwd(shell, commands->args, *list);
 	else if (ft_strncmp(commands->args->content, "env", 4) == 0)
-		execute_env(*list, shell, commands->args);
+		execute_env(*list, shell);
 	else if (ft_strncmp(commands->args->content, "unset", 6) == 0)
 		execute_unset(list, commands->args, shell);
 	else if (ft_strncmp(commands->args->content, "exit", 5) == 0)

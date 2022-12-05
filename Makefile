@@ -1,18 +1,25 @@
-SRCS	=	./sources/builtins/cd.c \
-			./sources/builtins/pwd.c \
-			./sources/builtins/echo.c \
-			./sources/builtins/env.c \
-			./sources/builtins/exit.c \
-			./sources/builtins/unset.c \
-			./sources/builtins/export.c \
-			./sources/executor/executor.c \
+SRCS	=	./sources/builtins/cd/cd.c \
+			./sources/builtins/cd/cd_utils.c \
+			./sources/builtins/pwd/pwd.c \
+			./sources/builtins/echo/echo.c \
+			./sources/builtins/env/env.c \
+			./sources/builtins/export/export.c \
+			./sources/builtins/export/export_utils.c \
+			./sources/builtins/exit/exit.c \
+			./sources/builtins/unset/unset.c \
 			./sources/executor/builtins.c \
+			./sources/executor/here_doc.c \
+			./sources/executor/redirects.c \
 			./sources/executor/binary.c \
+			./sources/executor/wait_child_process.c \
 			./sources/executor/bins_utils.c \
 			./sources/executor/pipes.c \
+			./sources/executor/get_command_position.c \
+			./sources/executor/parse_command.c \
 			./sources/main/minishell_main.c \
 			./sources/main/readline_prompt.c \
 			./sources/signals/catch_signals.c \
+			./sources/signals/sig2.c \
 			./sources/environ/environ_vars_utils1.c \
 			./sources/environ/environ_vars_utils2.c \
 			./sources/parser/clear_commands_array.c \
@@ -20,6 +27,7 @@ SRCS	=	./sources/builtins/cd.c \
 			./sources/parser/remove_redirects_spaces.c \
 			./sources/parser/get_command_information.c \
 			./sources/parser/wildcard_find_all_utils.c \
+			./sources/parser/wildcard_find_all_utils2.c \
 			./sources/parser/remove_quotes_change_path.c \
 			./sources/parser/wildcard_find_all_arguments.c \
 			./sources/parser/get_total_commands_validate_line.c \
@@ -32,13 +40,13 @@ NAME	=	minishell
 
 LNAME	=	libft/libft.a
 
-RL_LIB	=	readline/libreadline.a
+RL_LIB	=	/opt/homebrew/opt/readline/lib
 
-HS_LIB	=	readline/libhistory.a
+RL_INC	=	/opt/homebrew/opt/readline/include
 
 GCC		=	gcc
 
-FLAGS	=	-Wall -Werror -Wextra -g
+FLAGS	=	-Wall -Werror -Wextra # -fsanitize=address
 
 RM		=	rm -f
 
@@ -47,7 +55,7 @@ RM		=	rm -f
 
 $(NAME): $(OBJS) ./libft/libft.h
 	$(MAKE) -C libft bonus
-	$(GCC) $(FLAGS) $(OBJS) $(LNAME) $(RL_LIB) $(HS_LIB) -ltermcap -lreadline -o $(NAME)
+	$(GCC) $(FLAGS) $(OBJS) $(LNAME) -L$(RL_LIB) -I$(RL_INC) -ltermcap -lreadline -o $(NAME)
 
 all:	$(NAME)
 

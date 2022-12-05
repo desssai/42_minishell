@@ -6,7 +6,7 @@
 /*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 15:01:55 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/24 14:08:11 by ncarob           ###   ########.fr       */
+/*   Updated: 2022/12/05 13:54:52 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ft_get_delta_of_indexes(char *str, int i,
 		j = 2;
 	}
 	else
-		while (str[++i] && !ft_strchr("\'\"$ =*.", str[i]))
+		while (str[++i] && !ft_strchr("\'\"$ =*", str[i]))
 			j++;
 	return (j);
 }
@@ -49,10 +49,8 @@ static char	*ft_replace_path(char *str, int *index, t_cmnds *command)
 			value = ft_strdup(env->value);
 		env = env->next;
 	}
-	if (!value && (i - *index - 1) && !ft_strchr(&str[i], '\"'))
+	if (!value && (i - *index - 1))
 		value = ft_strdup("");
-	else if (!value && (i - *index - 1) && ft_strchr(&str[i], '\"'))
-		value = ft_strdup(" ");
 	else if (!value && !(i - *index - 1))
 		value = ft_strdup("$");
 	value = ft_strjoin(ft_substr(str, 0, *index), value, 1, 1);

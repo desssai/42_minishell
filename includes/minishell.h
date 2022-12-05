@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wurrigon <wurrigon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncarob <ncarob@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:18:03 by ncarob            #+#    #+#             */
-/*   Updated: 2022/03/23 18:40:35 by wurrigon         ###   ########.fr       */
+/*   Updated: 2022/12/05 11:51:21 by ncarob           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include "../libft/libft.h"
-# include "../readline/tilde.h"
-# include "../readline/rlconf.h"
-# include "../readline/rlstdc.h"
-# include "../readline/history.h"
-# include "../readline/keymaps.h"
-# include "../readline/readline.h"
-# include "../readline/chardefs.h"
-# include "../readline/rltypedefs.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
-# define MAX_PATH 1024
+# define MAX_PATH 		1024
+# define LLU 			9223372036854775807
 
 # define CMD_ERROR 		"minishell: parsing error\n"
 # define MLC_ERROR 		"minishell: memory allocation error\n"
@@ -41,14 +36,17 @@
 # define FORK_ERR		"minishell: fork error\n"
 # define WAITPID_ERR	"minishell: waitpid error\n"
 # define WLC_ERROR		"minishell: no matches found: %s\n"
-# define PIPES_ERR		"minishell: pipes error\n" 
+# define PIPES_ERR		"minishell: pipes error\n"
+# define PARENT_DIR		"cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"
+# define FORK_ERROR		"minishell: fork: Resource temporarily unavailable\n"
 
-// Exit status
+/* Exit status codes */
+# define EXIT_ERR			1
+# define EXIT_FORK_ERR 		128
+# define EXIT_BIG_NUM		255
+# define EXIT_NON_NUMERIC	255
 
-# define EXIT_ERR	1
-
-// General shell structure.
-
+/* Main shell struct */
 typedef struct s_shell
 {
 	int				exit_status;
@@ -57,11 +55,9 @@ typedef struct s_shell
 	int				fd_out;
 	int				process_count;
 	int				**pipes;
-	// char 			*here_doc;
-}				t_shell;
+}	t_shell;
 
-// Environment variables list structure.
-
+/* Structure to strore environment variables */
 typedef struct s_envars
 {
 	char				*key;
@@ -69,14 +65,13 @@ typedef struct s_envars
 	struct s_envars		*next;
 }	t_envars;
 
-// Commands list structure.
-
 typedef struct s_redirs
 {
 	char	*filename;
 	int		mode;
 }	t_redirs;
 
+/* Structure to store commands from input */
 typedef struct s_comnds
 {
 	t_redirs		**redirs;
@@ -85,8 +80,7 @@ typedef struct s_comnds
 	t_shell			*shell;
 }	t_cmnds;
 
-// Command Parser.
-
+/* Commands parser */
 void		ft_check_quotes(char c, int *inside_s_quote, int *inside_d_quote);
 t_cmnds		**ft_parse_input(char *str, t_envars *envs, t_shell *shell);
 void		ft_get_command_arguments(char *line, t_cmnds *command);
@@ -98,76 +92,95 @@ int			ft_check_line_part_two(char *str);
 char		*ft_remove_redirects(char *str);
 char		*ft_remove_spaces(char *str);
 
-// Environment Variables Parser.
-
+/* Environment variables parser */
 void		ft_envar_add_back(t_envars **vars, t_envars *new_var);
 char		*find_env_node(t_envars *list, const char *key);
 void		ft_envar_del_one(t_envars **vars, char *key);
 t_envars	*ft_envar_new(char *key, char *value);
 void		ft_envars_clear(t_envars **vars);
 void		ft_print_envars(t_envars *vars);
-t_envars	*ft_init_envars(char **envp);
 int			get_args_quantity(t_list *args);
+t_envars	*ft_init_envars(char **envp);
 
-
-// Readline and prompt.
-
-void		rl_replace_line(const char *text, int clear_undo);
+/* Readline */
 void		set_shell(t_envars **envs, t_shell **shell, char **envp);
+void		rl_replace_line(const char *text, int clear_undo);
 void		add_line_to_history(char *line);
 char		*read_prompt_line(void);
 
-// Utilities.
-
+/* Utilities */
 void		set_shell_level(t_envars *envs, t_shell *shell);
 void		fatal_error(char *msg);
 
-// Signals.
-
+/* Signals */
 void		tty_hide_input(void);
 void		catch_signals(void);
-void		set_signals(void);
 void		*sigint_handler(int sig_num);
+void		sig_heredoc(int sig);
+void		c_fork(int signum);
+void		sigquit_handler(int num);
+void		*sig_fork(int num);
+void		return_signals_parent_process(void);
+void		set_signals(t_cmnds **commands);
 
-
-// Built-ins.
-
+/* Builtins */
 int			is_built_in(char *command);
-void		built_ins(t_envars **list, t_cmnds *commands, t_shell *shell, char **envp);
-void		execute_export(t_envars **list, t_list *args, t_shell *shell);
-void		execute_unset(t_envars **list, t_list *args, t_shell *shell);
-void		execute_cd(t_envars **list, t_list *args, t_shell *shell);
-void		execute_exit(t_shell *shell, t_list *args);
-void		execute_echo(t_list *args, t_shell *shell);
-void		execute_pwd(t_shell *shell, t_list *args, t_envars *list);
-void		execute_env(t_envars *list, t_shell *shell, t_list *args);
+void		built_ins(t_envars **list, t_cmnds *commands, t_shell **shell, char **envp);
 
-// Executor.
+/* cd builtin */
+void		execute_cd(t_envars **list, t_list *args, t_shell **shell);
+void		handle_non_existing_path(t_list *args, t_shell **shell);
+void		handle_empty_input(t_envars *list, t_shell **shell);
 
-void		execute_command(t_cmnds *command, t_shell **shell, char **envp);
-int			handle_pipes_redirects(t_cmnds *command, t_shell *shell);
-void 		launch_command(t_cmnds *command, char **envp, t_shell **shell);
+/* echo builtin */
+void		execute_echo(t_list *args, t_shell **shell);
 
-// Pipes
-int			**pipes_loop(int cmnds);
-void 		open_pipes(int **pipes, int cmnds);
+/* env builtin */
+void		execute_env(t_envars *list, t_shell **shell);
+
+/* export builtin */
+void		execute_export(t_envars **list, t_list *args, t_shell **shell);
+void		check_if_key_exists(t_envars **list, char *arg);
+char		**get_sorted_keys(char **keys, int size_of_list);
+int			is_valid_env_key(char *token);
+int			is_equal_sign(char *token);
+int			get_list_size(t_envars *list);
+
+/* unset builtin */
+void		execute_unset(t_envars **list, t_list *args, t_shell **shell);
+void		execute_exit(t_shell **shell, t_list *args);
+void		execute_pwd(t_shell **shell, t_list *args, t_envars *list);
+
+/* Executor */
+int			handle_redirects(t_cmnds *command, t_shell **shell, int in);
+void		launch_command(t_cmnds *command, char **envp, t_shell **shell);
+void		wait_child_processes(t_shell **shell, pid_t id);
+void		fork_error(t_shell **shell);
+void		exec_system_bin(t_cmnds *command, char **path, char ***cmd_args);
+void		exec_non_system_bin(t_cmnds *command, char **path, char ***cmdargs);
+void		get_command_position(t_cmnds *command, t_shell **shell, int cmd_pos, int in);
+
+/* Heredoc */
+void		here_doc(char *del, t_shell **shell, int in);
+
+/* Pipes */
+void		open_pipes(int **pipes, int cmnds);
 void		close_all_pipes(int **pipes);
+int			**pipes_loop(int cmnds);
 
-// Binary.
-
-void		execute_bin(t_cmnds **commands, t_shell **shell, char **envp);
+/* Binary */
+void		execute_bin(t_cmnds **commands, t_shell **shell, char **envp, int in);
 char		**get_command_arguments(t_list *args);
-void		get_command_position(t_cmnds *command, t_shell **shell, int cmd_pos);
+void		get_command_position(t_cmnds *command, t_shell **shell, int cmd_pos, int in);
 
-
-// Wildcards replacement
-
+/* Wildcard replacement */
 void		ft_lst_insert_lst(t_list **lst1, t_list *curr, t_list *lst2);
-void		ft_free_command_redirects(t_cmnds *command);
 int			ft_replace_wildcards(t_cmnds *command, t_list *args_copy);
 void		ft_get_wildcard_pieces(char *str, char **pieces);
 void		ft_lst_del_value(t_list **lst, char *value);
+void		ft_free_command_redirects(t_cmnds *command);
 char		**ft_init_wildcard_pieces(char *str);
+int			ft_check_for_dollarsign(char *str);
 int			ft_array_clear(char ***array);
 
 #endif

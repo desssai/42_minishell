@@ -11,7 +11,7 @@ builtin implementation for such commands as `cd`, `pwd`, `export`, `env`, `exit`
 finally, executing parsed commands.
 
 The program launches a custom shell that waits for the input of a command and executes. 
-`minishell` repeats this behavior in a loop until stopped. So as to handle errors that may arise 
+`minishell` repeats this behaviour in a loop until stopped. So as to handle errors that may arise 
 during the execution of commands, a child-process is created for the execution of each command 
 using `fork()`. Every command is executed inside of a child-process, while the only parent-process 
 waits for the child to either complete its task, or finish with an error id.

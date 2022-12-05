@@ -18,6 +18,8 @@ waits for the child to either complete its task, or finish with an error id.
 
 ![Usage example 1](https://user-images.githubusercontent.com/75085822/205712874-f6d15ac7-53db-43a4-9413-48073c700968.gif)
 
+This project is written by me and [taisiabarteneva.](https://github.com/taisiabarteneva)
+
 ## Usage
 
 1. Install `readline` library for your cpu architecture by downloading source files or by using brew.

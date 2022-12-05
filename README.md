@@ -73,5 +73,5 @@ minishell has several built-in executables:
 | env with no options or arguments | lists all the current environment variables. |
 | exit with no options | exits minishell. |
 
-Other commands are executed using execve with their appropriate path. 
+Other commands are executed using `execve` with their appropriate path. 
 In case there is no such command, an error is displayed in the terminal.

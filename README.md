@@ -2,6 +2,22 @@
 
 ## Overview
 
+It is a team project that is a part of ecole 42 course. This project is about implementing 
+your very own shell (yes, like a custom bash or zsh, but a simple one). The project consists of parsing input; 
+managing input and output files with redirections; working with unix processes; working with file 
+descriptors; using pipelines for the processes to communicate; managing environment variables; 
+storing all the commands in history; managing signalls such as SIGKILL, SIGINT, etc; creating 
+builtin implementation for such commands as `cd`, `pwd`, `export`, `env`, `exit`, `echo` and `unset`;
+finally, executing parsed commands.
+
+The program launches a custom shell that waits for the input of a command and executes. 
+`minishell` repeats this behavior in a loop until stopped. So as to handle errors that may arise 
+during the execution of commands, a child-process is created for the execution of each command 
+using `fork()`. Every command is executed inside of a child-process, while the only parent-process 
+waits for the child to either complete its task, or finish with an error id.
+
+![Usage example 1](https://user-images.githubusercontent.com/75085822/205712874-f6d15ac7-53db-43a4-9413-48073c700968.gif)
+
 ## Usage
 
 1. Install `readline` library for your cpu architecture by downloading source files or by using brew.
@@ -39,6 +55,8 @@ The program works with all of the redirection modes.
 | \> | Erase the file's content and write to an output file. |
 | \>> | Append to an output file. |
 
+![Usage example 2](https://user-images.githubusercontent.com/75085822/205715147-4fbd5458-831b-4f1b-8bbf-d4494061abfa.gif)
+
 - `minishell` is able to parse input with both single quotes `' '` and double quotes `" "`.
 All of the possible combinations of them are handled by the program.
 
@@ -62,16 +80,16 @@ deleting environment variables inside `minishell` doesn't affect those of your t
 
 - The program handles signals such as `ctrl-C`, `ctrl-D` and `ctrl-\` which behave like in bash.
 
-minishell has several built-in executables:
+`minishell` has several built-in executables:
 | Function | Description |
 | -------- | ----------- |
-| echo with option -n | displays a line of text/string in standard output. -n flag does it with a newline. |
-| cd with a relative or an absolute path | changes the current directory. |
-| pwd with no options | prints working directory. |
-| export with no options | sets or amends an environment variable. |
-| unset with no options | unsets an environment variable. |
-| env with no options or arguments | lists all the current environment variables. |
-| exit with no options | exits minishell. |
+| `echo` with option `-n` | displays a line of text/string in standard output. -n flag does it with a newline. |
+| `cd` with a relative or an absolute path | changes the current directory. |
+| `pwd` with no options | prints working directory. |
+| `export` with no options | sets or amends an environment variable. |
+| `unset` with no options | unsets an environment variable. |
+| `env` with no options or arguments | lists all the current environment variables. |
+| `exit` with no options | exits minishell. |
 
 Other commands are executed using `execve` with their appropriate path. 
 In case there is no such command, an error is displayed in the terminal.
